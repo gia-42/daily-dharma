@@ -3,13 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daily Dharma</title>
 <meta name="description" content="Daily Dharma: a daily LOST trivia quiz. Six questions a day, one for each of the Numbers.">
 <meta name="theme-color" content="#050605">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%230c0f0c%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-family=%22monospace%22 font-size=%2218%22 fill=%22%23a8c59c%22 text-anchor=%22middle%22%3E%3E:%3C/text%3E%3C/svg%3E">
-<title>Daily Dharma</title>
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dharma">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Oswald:wght@500&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}*{box-sizing:border-box}</style>
 <style>
 /* Layout: one 1970s station terminal. Phosphor-green text on a dark CRT with scanlines; prompt-style question, bracketed options, and a mechanical black-and-white split-flap counter. Deliberately single dark theme. */
 :root{
@@ -115,7 +121,34 @@ textarea.sharebox{width:100%;font:inherit;font-size:1rem;background:var(--room);
 footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 @media (max-width:440px){body{font-size:20px}h1{font-size:1.9rem}.q{font-size:1.3rem}.score{font-size:3.6rem}.fd{width:1.7rem;height:2.7rem;font-size:1.9rem}.sep{line-height:2.7rem}.stat span{font-size:.75rem}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Operator bar, account panel, install line */
+.opbar{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:1.05rem;color:var(--dim);margin-top:-8px}
+.opbar b{color:var(--phos);font-weight:400}
+.linkbtn{font:inherit;color:var(--phos);text-shadow:inherit;background:transparent;border:0;padding:0 2px;cursor:pointer}
+.linkbtn:hover,.linkbtn:focus-visible{background:var(--phos);color:var(--crt);text-shadow:none;outline:0}
+.sync{font-size:.9rem;color:var(--dim)}
+.sync.err{color:var(--bad)}
+.panel{position:fixed;inset:0;z-index:4;background:rgba(3,4,3,.88);display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 48px) 16px 24px;overflow-y:auto}
+.panel .screen{width:100%;max-width:460px;gap:14px}
+.panel h2{font-weight:400;font-size:1.9rem;letter-spacing:.1em;margin:0;line-height:1}
+.panel p{margin:0;font-size:1.15rem}
+.panel .dimln{font-size:1rem}
+.stack{display:grid;gap:10px}
+.btn{font:inherit;font-size:1.3rem;color:var(--phos);text-shadow:inherit;background:transparent;border:1px solid var(--phos);padding:6px 12px;cursor:pointer;text-align:left}
+.btn:hover:not(:disabled),.btn:focus-visible{background:var(--phos);color:var(--crt);text-shadow:none;outline:0}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn.quiet{border-color:var(--dim);color:var(--dim)}
+.or{color:var(--dim);font-size:1rem;text-align:center}
+.field{display:grid;gap:4px}
+.field label{font-size:1rem;color:var(--dim)}
+.field input{font:inherit;font-size:1.5rem;color:var(--phos);text-shadow:inherit;background:var(--room);border:1px solid var(--dim);border-radius:0;padding:6px 10px;width:100%;caret-color:var(--phos)}
+.field input:focus{outline:0;border-color:var(--phos)}
+.msg{min-height:1.2em;font-size:1.05rem}
+.msg.err{color:var(--bad)}
+.install{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.95rem;color:var(--dim)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -124,6 +157,10 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
     <h1>DAILY DHARMA</h1>
     <div class="meta">ORIENTATION <b id="dayno">#1</b><br><span id="datestr"></span></div>
   </header>
+  <div class="opbar" id="opbar" hidden>
+    <span>OPERATOR: <b id="opName">GUEST</b> <span class="sync" id="opSync"></span></span>
+    <button class="linkbtn" id="opBtn" type="button">[ LOG IN ]</button>
+  </div>
   <div class="progress" id="progress" aria-label="Progress"></div>
   <main id="stage"></main>
   <section aria-label="Your stats">
@@ -135,7 +172,12 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
     </div>
   </section>
  </div>
- <footer>SIX QUESTIONS DAILY, ONE FOR EACH NUMBER. NEW SET AT MIDNIGHT. UNOFFICIAL FAN QUIZ.</footer>
+ <footer>SIX QUESTIONS DAILY, ONE FOR EACH NUMBER. NEW SET AT MIDNIGHT. BETA. UNOFFICIAL FAN QUIZ.</footer>
+ <div class="install" id="installRow" hidden></div>
+</div>
+
+<div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" hidden>
+  <div class="screen" id="panelBody"></div>
 </div>
 
 <script>
@@ -262,8 +304,8 @@ function shuffle(arr,seed){const a=arr.slice(),r=rng(seed);for(let i=a.length-1;
 const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
 const dayNo=Math.max(1,Math.round((today-EPOCH)/864e5)+1);
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const parseYmd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
 const key=ymd(today);
-// Cycle through the bank in rounds; each round is a fresh seeded shuffle, so no repeats until the bank runs out.
 function questionsFor(n){
   const per=Math.floor(BANK.length/PER_DAY), idx=n-1, round=Math.floor(idx/per), slot=idx%per;
   const order=shuffle(BANK.map((_,i)=>i),4815+round*162342);
@@ -274,23 +316,32 @@ function questionsFor(n){
 }
 const QS=questionsFor(dayNo);
 
-function load(){try{return JSON.parse(localStorage.getItem("dailyDharma")||"{}")}catch(e){return{}}}
-function save(d){try{localStorage.setItem("dailyDharma",JSON.stringify(d))}catch(e){}}
-let data=load(); data.history=data.history||{};
-let state=data.history[key]||{picks:[],done:false};
+// ---------- Local store (cache on this device; the cloud copy wins when logged in) ----------
+const LS="dailyDharma";
+function load(){try{const d=JSON.parse(localStorage.getItem(LS)||"{}");d.history=d.history||{};return d}catch(e){return{history:{}}}}
+function save(d){try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){}}
+let data=load();
+let state=data.history[key]||{picks:[],done:false,score:0};
 
 const $=id=>document.getElementById(id), stage=$("stage");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 $("dayno").textContent="#"+dayNo;
 $("datestr").textContent=today.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short",year:"numeric"});
-
-function pips(){$("progress").innerHTML=QS.map((q,i)=>{const p=state.picks[i];let c=p===undefined?(i===state.picks.length&&!state.done?"now":""):(p===q.answer?"good":"bad");return`<span class="pip ${c}">[${String(NUMS[i]).padStart(2,"0")}]</span>`}).join("")}
 const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function score(){return state.picks.reduce((s,p,i)=>s+(p===QS[i].answer?1:0),0)}
+function persist(){state.score=score();data.history[key]=state;save(data);pushDay(key)}
+
+// ---------- Game screens ----------
+let view="intro";
+function pips(){$("progress").innerHTML=QS.map((q,i)=>{const p=state.picks[i];let c=p===undefined?(i===state.picks.length&&!state.done?"now":""):(p===q.answer?"good":"bad");return`<span class="pip ${c}">[${String(NUMS[i]).padStart(2,"0")}]</span>`}).join("")}
 let typeTimer=null;
 function typeOut(el,text){clearTimeout(typeTimer);if(reduceMotion){el.textContent=text;return}
   let n=0;el.classList.add("cur");(function step(){el.textContent=text.slice(0,++n);if(n<text.length)typeTimer=setTimeout(step,16);else el.classList.remove("cur")})()}
 
 function showQuestion(i,revealed){
+  view="question";
   const q=QS[i]; const pick=state.picks[i];
   stage.innerHTML=`<div class="card">
     <div class="era"><span>${q.era}</span><span>No. ${NUMS[i]} · ${i+1} of ${PER_DAY}</span></div>
@@ -303,16 +354,8 @@ function showQuestion(i,revealed){
   else{const n=$("nextBtn");n.focus();n.onclick=()=>{if(i===PER_DAY-1)finish();else{pips();showQuestion(i+1,false)}}}
 }
 
-function score(){return state.picks.reduce((s,p,i)=>s+(p===QS[i].answer?1:0),0)}
-function persist(){state.score=score();data.history[key]=state;save(data)}
-
 function finish(){
-  if(!state.done){
-    state.done=true;
-    const y=new Date(today);y.setDate(y.getDate()-1);const yk=ymd(y);
-    data.streak=(data.lastDay===yk?(data.streak||0):0)+1;
-    data.best=Math.max(data.best||0,data.streak);data.lastDay=key;persist();
-  }
+  if(!state.done){state.done=true;persist()}
   pips();showResults();stats();
 }
 
@@ -325,8 +368,9 @@ const VERDICTS=[
  "Nearly a full set. Jacob would take note.",
  "Every Number entered. The Island thanks you."
 ];
-function shareText(){return`Daily Dharma #${dayNo}  ${score()}/${PER_DAY}\n`+state.picks.map((p,i)=>p===QS[i].answer?"🟩":"⬛").join("")+`\n`+NUMS.join(" ")}
+function shareText(){return`Daily Dharma #${dayNo}  ${score()}/${PER_DAY}\n`+state.picks.map((p,i)=>p===QS[i].answer?"🟩":"⬛").join("")+`\n`+NUMS.join(" ")+`\n`+location.origin+location.pathname}
 function showResults(){
+  view="results";
   const s=score();
   stage.innerHTML=`<div class="card">
     <div class="era"><span>Today's result</span><span>Orientation #${dayNo}</span></div>
@@ -342,10 +386,11 @@ function showResults(){
   </div>`;
   buildClock();
   $("shareBtn").onclick=()=>{const t=shareText();
-    const fb=()=>{$("fallback").innerHTML=`<textarea class="sharebox" id="shareBox" rows="3" readonly>${t}</textarea>`;const x=$("shareBox");x.focus();x.select();$("toast").textContent="Select and copy"};
+    const fb=()=>{$("fallback").innerHTML=`<textarea class="sharebox" id="shareBox" rows="4" readonly>${esc(t)}</textarea>`;const x=$("shareBox");x.focus();x.select();$("toast").textContent="Select and copy"};
     try{navigator.clipboard.writeText(t).then(()=>{$("toast").textContent="Copied"},fb)}catch(e){fb()}};
   tick();
 }
+
 // Split-flap clock: six black tiles (HH MM SS); each changed digit flips its top half down, then the new bottom half falls into place.
 let digits=[],tickTimer=null;
 function buildClock(){
@@ -368,59 +413,256 @@ function tick(){clearTimeout(tickTimer);if(!$("cd"))return;const t=new Date(toda
   digits.forEach((d,i)=>setDigit(d,str[i]));
   tickTimer=setTimeout(tick,1000-(Date.now()%1000)+5)}
 
+// ---------- Stats (computed from the full history, so they match on every device) ----------
+function streaks(){
+  const days=Object.keys(data.history).filter(k=>data.history[k]&&data.history[k].done).sort();
+  let best=0,run=0,prev=null;
+  for(const k of days){run=(prev&&Math.round((parseYmd(k)-parseYmd(prev))/864e5)===1)?run+1:1;best=Math.max(best,run);prev=k}
+  const y=new Date(today);y.setDate(y.getDate()-1);
+  const cur=(prev===key||prev===ymd(y))?run:0;
+  return{days,cur,best};
+}
 function stats(){
-  const done=Object.entries(data.history).filter(([,v])=>v.done);
-  $("sPlayed").textContent=done.length;
-  $("sAvg").textContent=done.length?Math.round(done.reduce((s,[k,v])=>s+(v.score??0),0)/(done.length*PER_DAY)*100)+"%":"–";
-  const y=new Date(today);y.setDate(y.getDate()-1);const yk=ymd(y);
-  $("sStreak").textContent=(data.lastDay===key||data.lastDay===yk)?(data.streak||0):0;
-  $("sBest").textContent=data.best||0;
+  const{days,cur,best}=streaks();
+  $("sPlayed").textContent=days.length;
+  $("sAvg").textContent=days.length?Math.round(days.reduce((s,k)=>s+(data.history[k].score||0),0)/(days.length*PER_DAY)*100)+"%":"–";
+  $("sStreak").textContent=cur;
+  $("sBest").textContent=best;
 }
 
-function start(){
-  $("progress").hidden=false;pips();
-  if(state.done)showResults();
-  else if(state.picks.length>=PER_DAY)finish();
-  else showQuestion(state.picks.length,false);
-}
-
-// Boot screen: init line, loading bar, orientation number, date, status, then the start button. Tap anywhere to skip.
+// ---------- Boot screen ----------
+let introSkipped=false;
+function introStatus(){const n=state.picks.length;
+  return{status:state.done?"SEQUENCE COMPLETE. RESULTS ON FILE.":n?`SEQUENCE IN PROGRESS: ${n} OF ${PER_DAY} ENTERED.`:`${PER_DAY} QUESTIONS QUEUED.`,
+         label:state.done?"[ VIEW RESULTS ]":n?"[ RESUME ]":"[ BEGIN ]"}}
 function intro(){
+  view="intro";introSkipped=false;
   $("progress").hidden=true;
   const longDate=today.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"}).toUpperCase();
-  const n=state.picks.length;
-  const status=state.done?"SEQUENCE COMPLETE. RESULTS ON FILE.":n?`SEQUENCE IN PROGRESS: ${n} OF ${PER_DAY} ENTERED.`:`${PER_DAY} QUESTIONS QUEUED.`;
-  const label=state.done?"[ VIEW RESULTS ]":n?"[ RESUME ]":"[ BEGIN ]";
   stage.innerHTML=`<div class="card intro" id="intro">
     <p class="ln" id="l0"></p>
     <p class="ln bar" id="bar"></p>
     <p class="ln big" id="l1"></p>
     <p class="ln" id="l2"></p>
     <p class="ln dimln" id="l3"></p>
-    <button class="next start" id="startBtn" hidden>${label}</button>
+    <button class="next start" id="startBtn" hidden></button>
   </div>`;
-  const lines={l0:"INITIALIZING STATION TERMINAL...",l1:`ORIENTATION #${dayNo}`,l2:longDate,l3:status};
+  const lines={l0:()=>"INITIALIZING STATION TERMINAL...",l1:()=>`ORIENTATION #${dayNo}`,l2:()=>longDate,l3:()=>introStatus().status};
   const BLOCKS=20, barText=k=>`[${"█".repeat(k)}${"░".repeat(BLOCKS-k)}] ${String(Math.round(k/BLOCKS*100)).padStart(3," ")}%`;
-  let skipped=false;const timers=[];
+  const timers=[];
   const wait=ms=>new Promise(r=>timers.push(setTimeout(r,ms)));
-  const done=()=>{skipped=true;timers.forEach(clearTimeout);
-    for(const id in lines){$(id).textContent=lines[id];$(id).classList.remove("cur")}
-    $("bar").textContent=barText(BLOCKS);const b=$("startBtn");b.hidden=false;b.focus();};
+  const done=()=>{introSkipped=true;timers.forEach(clearTimeout);
+    for(const id in lines){$(id).textContent=lines[id]();$(id).classList.remove("cur")}
+    $("bar").textContent=barText(BLOCKS);const b=$("startBtn");b.textContent=introStatus().label;b.hidden=false;b.focus();};
   $("startBtn").onclick=e=>{e.stopPropagation();start()};
-  $("intro").onclick=()=>{if(!skipped)done()};
+  $("intro").onclick=()=>{if(!introSkipped)done()};
   if(reduceMotion){done();return}
-  async function type(id,speed){const el=$(id),t=lines[id];el.classList.add("cur");
-    for(let i=1;i<=t.length;i++){if(skipped)return;el.textContent=t.slice(0,i);await wait(speed)}el.classList.remove("cur")}
+  async function type(id,speed){const el=$(id),t=lines[id]();el.classList.add("cur");
+    for(let i=1;i<=t.length;i++){if(introSkipped)return;el.textContent=t.slice(0,i);await wait(speed)}el.classList.remove("cur")}
   (async()=>{
-    await wait(300);await type("l0",22);if(skipped)return;
-    for(let k=0;k<=BLOCKS;k++){if(skipped)return;$("bar").textContent=barText(k);await wait(k<14?45:90)}
-    await wait(250);if(skipped)return;
-    await type("l1",55);if(skipped)return;await wait(200);
-    await type("l2",28);if(skipped)return;await wait(200);
-    await type("l3",22);if(skipped)return;await wait(300);
-    if(!skipped)done();
+    await wait(300);await type("l0",22);if(introSkipped)return;
+    for(let k=0;k<=BLOCKS;k++){if(introSkipped)return;$("bar").textContent=barText(k);await wait(k<14?45:90)}
+    await wait(250);if(introSkipped)return;
+    await type("l1",55);if(introSkipped)return;await wait(200);
+    await type("l2",28);if(introSkipped)return;await wait(200);
+    await type("l3",22);if(introSkipped)return;await wait(300);
+    if(!introSkipped)done();
   })();
 }
+async function start(){
+  const b=$("startBtn");if(b){b.disabled=true}
+  await Promise.race([ready,sleep(5000)]);   // let a first cloud sync land before play starts
+  $("progress").hidden=false;pips();
+  if(state.done)showResults();
+  else if(state.picks.length>=PER_DAY)finish();
+  else showQuestion(state.picks.length,false);
+}
+// Redraw whatever is on screen after the history changes (login, sync, logout).
+function refresh(){
+  state=data.history[key]||{picks:[],done:false,score:0};
+  stats();
+  if(view==="intro"){if(introSkipped&&$("l3")){const s=introStatus();$("l3").textContent=s.status;$("startBtn").textContent=s.label}return}
+  pips();
+  if(state.done)showResults();
+  else if(state.picks.length>=PER_DAY)finish();
+  else if(view!=="question"||state.picks.length)showQuestion(state.picks.length,false);
+}
+
+// ---------- Accounts and cloud sync (Supabase) ----------
+const CFG=window.DHARMA_CONFIG||{};
+const cloudOn=!!(CFG.supabaseUrl&&CFG.supabaseAnonKey&&window.supabase&&window.supabase.createClient);
+const sb=cloudOn?window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}}):null;
+let session=null, profile=null, syncedFor=null;
+
+function setSync(text,err){const el=$("opSync");el.textContent=text?`· ${text}`:"";el.classList.toggle("err",!!err)}
+function renderOperator(){
+  if(!cloudOn){$("opbar").hidden=true;return}
+  $("opbar").hidden=false;
+  $("opName").textContent=session?(profile?.username||"…").toUpperCase():"GUEST";
+  $("opBtn").textContent=session?"[ ACCOUNT ]":"[ LOG IN ]";
+  if(!session)setSync("");
+}
+const better=(a,b)=>{if(!a)return b;if(!b)return a;if(!!a.done!==!!b.done)return a.done?a:b;return(a.picks?.length||0)>=(b.picks?.length||0)?a:b};
+const sameDay=(a,b)=>a&&b&&!!a.done===!!b.done&&(a.picks||[]).join()===(b.picks||[]).join();
+
+async function syncAll(){
+  const uid=session.user.id;setSync("SYNCING");
+  const{data:rows,error}=await sb.from("results").select("day,picks,score,done").eq("user_id",uid);
+  if(error)throw error;
+  const remote={};rows.forEach(r=>remote[r.day]={picks:r.picks||[],score:r.score||0,done:!!r.done});
+  const up=[];
+  new Set([...Object.keys(remote),...Object.keys(data.history)]).forEach(k=>{
+    const l=data.history[k],r=remote[k],w=better(l,r);
+    data.history[k]={picks:[...(w.picks||[])],score:w.score||0,done:!!w.done};
+    if(!sameDay(data.history[k],r))up.push({user_id:uid,day:k,...data.history[k]});
+  });
+  if(up.length){const{error:e2}=await sb.from("results").upsert(up,{onConflict:"user_id,day"});if(e2)throw e2}
+  save(data);setSync("SYNCED");
+}
+let pushChain=Promise.resolve();
+function pushDay(k){
+  if(!sb||!session)return;
+  const row={user_id:session.user.id,day:k,picks:data.history[k].picks,score:data.history[k].score||0,done:!!data.history[k].done};
+  setSync("SAVING");
+  pushChain=pushChain.then(()=>sb.from("results").upsert(row,{onConflict:"user_id,day"})).then(({error})=>setSync(error?"NOT SAVED":"SYNCED",!!error)).catch(()=>setSync("OFFLINE",true));
+}
+async function loadProfile(){
+  const{data:p,error}=await sb.from("profiles").select("username").eq("id",session.user.id).maybeSingle();
+  if(error)throw error;profile=p||null;
+}
+async function onSession(){
+  renderOperator();
+  if(!session){profile=null;syncedFor=null;return}
+  if(syncedFor===session.user.id)return;
+  syncedFor=session.user.id;
+  try{await loadProfile();renderOperator();await syncAll();refresh()}
+  catch(e){setSync("OFFLINE",true);syncedFor=null}
+  if(!profile)openPanel("username");
+}
+const ready=(async()=>{
+  renderOperator();
+  if(!sb)return;
+  try{const{data:{session:s}}=await sb.auth.getSession();session=s;await onSession()}catch(e){}
+  sb.auth.onAuthStateChange((event,s)=>{
+    // Run outside the callback: the auth client must not be awaited from inside it.
+    setTimeout(async()=>{
+      if(event==="SIGNED_OUT"){session=null;profile=null;syncedFor=null;data={history:{}};save(data);renderOperator();refresh();return}
+      session=s;if(event==="SIGNED_IN"||event==="INITIAL_SESSION")await onSession();else renderOperator();
+    },0);
+  });
+})();
+
+// ---------- Account panel ----------
+let lastFocus=null, pendingEmail="";
+function closePanel(){$("panel").hidden=true;document.body.style.overflow="";lastFocus?.focus?.()}
+function panelMsg(t,err){const m=$("pMsg");if(m){m.textContent=t||"";m.classList.toggle("err",!!err)}}
+function busy(on){$("panelBody").querySelectorAll("button,input").forEach(el=>el.disabled=on)}
+function openPanel(kind){
+  if(!cloudOn)return;
+  if($("panel").hidden)lastFocus=document.activeElement;
+  $("panel").hidden=false;document.body.style.overflow="hidden";
+  const P=$("panelBody"), prov=CFG.providers||{};
+  const redirectTo=location.origin+location.pathname;
+  if(kind==="login"){
+    P.innerHTML=`<h2 id="panelTitle">IDENTIFY YOURSELF</h2>
+      <p class="dimln">Log in to keep your streak on every device.</p>
+      <div class="stack">
+        ${prov.google!==false?'<button class="btn" id="pGoogle" type="button">&gt; CONTINUE WITH GOOGLE</button>':""}
+        ${prov.apple?'<button class="btn" id="pApple" type="button">&gt; CONTINUE WITH APPLE</button>':""}
+      </div>
+      ${prov.google!==false||prov.apple?'<p class="or">— OR USE YOUR EMAIL —</p>':""}
+      <form class="stack" id="pEmailForm" novalidate>
+        <div class="field"><label for="pEmail">EMAIL ADDRESS</label><input id="pEmail" type="email" autocomplete="email" inputmode="email" required></div>
+        <button class="btn" type="submit">&gt; SEND LOGIN CODE</button>
+      </form>
+      <p class="msg" id="pMsg" aria-live="polite"></p>
+      <button class="btn quiet" id="pClose" type="button">[ CANCEL ]</button>`;
+    const oauth=async provider=>{busy(true);panelMsg("CONNECTING...");
+      const{error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo}});
+      if(error){busy(false);panelMsg(error.message,true)}};
+    $("pGoogle")&&($("pGoogle").onclick=()=>oauth("google"));
+    $("pApple")&&($("pApple").onclick=()=>oauth("apple"));
+    $("pEmailForm").onsubmit=async e=>{e.preventDefault();const email=$("pEmail").value.trim();
+      if(!/^\S+@\S+\.\S+$/.test(email)){panelMsg("Enter a valid email address.",true);return}
+      busy(true);panelMsg("TRANSMITTING...");
+      const{error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});
+      busy(false);
+      if(error){panelMsg(error.message,true);return}
+      pendingEmail=email;openPanel("code")};
+    $("pClose").onclick=closePanel;
+    ($("pGoogle")||$("pEmail")).focus();
+  }
+  else if(kind==="code"){
+    P.innerHTML=`<h2 id="panelTitle">ENTER THE CODE</h2>
+      <p class="dimln">We sent a code to ${esc(pendingEmail)}. It can take a minute to arrive; check spam too.</p>
+      <form class="stack" id="pCodeForm" novalidate>
+        <div class="field"><label for="pCode">LOGIN CODE</label><input id="pCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
+        <button class="btn" type="submit">&gt; VERIFY</button>
+      </form>
+      <p class="msg" id="pMsg" aria-live="polite"></p>
+      <button class="btn quiet" id="pBack" type="button">[ CHANGE EMAIL ]</button>`;
+    $("pCodeForm").onsubmit=async e=>{e.preventDefault();const token=$("pCode").value.replace(/\s/g,"");
+      if(token.length<6){panelMsg("Enter the full code from the email.",true);return}
+      busy(true);panelMsg("VERIFYING...");
+      const{error}=await sb.auth.verifyOtp({email:pendingEmail,token,type:"email"});
+      busy(false);
+      if(error){panelMsg("That code didn't work. Check it, or request a new one.",true);return}
+      panelMsg("ACCESS GRANTED.");setTimeout(()=>{if(!$("panel").hidden&&$("pCode"))closePanel()},700)};
+    $("pBack").onclick=()=>openPanel("login");
+    $("pCode").focus();
+  }
+  else if(kind==="username"){
+    P.innerHTML=`<h2 id="panelTitle">CHOOSE AN OPERATOR NAME</h2>
+      <p class="dimln">This is your username. 3 to 16 letters, numbers or underscores.</p>
+      <form class="stack" id="pNameForm" novalidate>
+        <div class="field"><label for="pName">USERNAME</label><input id="pName" type="text" autocomplete="username" maxlength="16" autocapitalize="off" spellcheck="false" value="${esc(profile?.username||"")}" required></div>
+        <button class="btn" type="submit">&gt; CONFIRM</button>
+      </form>
+      <p class="msg" id="pMsg" aria-live="polite"></p>
+      ${profile?'<button class="btn quiet" id="pBack" type="button">[ BACK ]</button>':""}`;
+    $("pNameForm").onsubmit=async e=>{e.preventDefault();const name=$("pName").value.trim();
+      if(!/^[A-Za-z0-9_]{3,16}$/.test(name)){panelMsg("Use 3 to 16 letters, numbers or underscores.",true);return}
+      busy(true);panelMsg("REGISTERING...");
+      const{error}=await sb.from("profiles").upsert({id:session.user.id,username:name});
+      busy(false);
+      if(error){panelMsg(error.code==="23505"?"That name is taken. Try another.":error.message,true);return}
+      profile={username:name};renderOperator();closePanel()};
+    $("pBack")&&($("pBack").onclick=()=>openPanel("account"));
+    $("pName").focus();
+  }
+  else if(kind==="account"){
+    const who=session?.user?.email||"";
+    P.innerHTML=`<h2 id="panelTitle">OPERATOR ${esc((profile?.username||"").toUpperCase())}</h2>
+      <p class="dimln">${esc(who)}</p>
+      <p>Your games and streaks are saved to your account.</p>
+      <div class="stack">
+        <button class="btn" id="pRename" type="button">&gt; CHANGE USERNAME</button>
+        <button class="btn" id="pOut" type="button">&gt; LOG OUT</button>
+      </div>
+      <p class="msg" id="pMsg" aria-live="polite"></p>
+      <button class="btn quiet" id="pClose" type="button">[ CLOSE ]</button>`;
+    $("pRename").onclick=()=>openPanel("username");
+    $("pOut").onclick=async()=>{busy(true);await sb.auth.signOut();closePanel()};
+    $("pClose").onclick=closePanel;
+    $("pRename").focus();
+  }
+}
+$("opBtn").onclick=()=>openPanel(session?"account":"login");
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("panel").hidden&&(profile||!session))closePanel()});
+
+// ---------- PWA: offline cache and install prompts ----------
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+(function(){
+  const row=$("installRow"), standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+  if(standalone)return;
+  const iOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  if(iOS){row.textContent="INSTALL: TAP SHARE, THEN ADD TO HOME SCREEN";row.hidden=false;return}
+  let deferred=null;
+  addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;
+    row.innerHTML='<button class="linkbtn" id="installBtn" type="button">[ INSTALL APP ]</button>';row.hidden=false;
+    $("installBtn").onclick=async()=>{deferred.prompt();await deferred.userChoice;deferred=null;row.hidden=true}});
+  addEventListener("appinstalled",()=>{row.hidden=true});
+})();
 
 stats();intro();
 </script>
