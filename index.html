@@ -178,6 +178,35 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .swi span{color:var(--dim)}
 .swi.bad{color:var(--bad)}
 @media (max-width:440px){.srow{grid-template-columns:minmax(0,1fr) auto 2.9em 3em;gap:6px;font-size:1rem}.sw{grid-template-columns:1fr}.tile b{font-size:1.6rem}}
+.flist{display:grid;gap:2px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font:inherit;font-size:1.2rem;color:var(--phos);text-shadow:inherit;background:transparent;border:0;border-bottom:1px dotted var(--rule);padding:5px 2px;text-align:left;width:100%}
+.frow.me .fn{color:var(--phos)}
+.frow .fn{min-width:0;overflow-wrap:anywhere}
+.frow .fa{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.frow .fa b{font-weight:400}
+.fbtn{cursor:pointer}
+.fbtn:hover,.fbtn:focus-visible{background:var(--phos);color:var(--crt);text-shadow:none;outline:0}
+.fbtn:hover .dimtxt,.fbtn:focus-visible .dimtxt{color:var(--crt)}
+.dimtxt{color:var(--dim)}
+.chev{color:var(--dim)}
+.act{font-size:1.15rem}
+.quietb{color:var(--dim)}
+.sq{display:inline-flex;gap:3px}
+.sq i{display:inline-block;width:.6em;height:.6em}
+.sq i.g{background:var(--phos)}
+.sq i.b{border:1px solid var(--bad);background:transparent}
+.crows{display:grid;gap:2px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) 5.2em 5.2em;gap:8px;align-items:baseline;font-size:1.15rem;font-variant-numeric:tabular-nums;border-bottom:1px dotted var(--rule);padding:2px 0}
+.crow .cl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .cv{text-align:right}
+.crow .cv.lose{color:var(--dim)}
+.crow .cv.win{color:var(--phos)}
+.crow .cv.win::before{content:"▸ ";font-size:.8em}
+.crow.chead .cv{color:var(--dim);font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hh{font-weight:400;color:var(--phos)}
+.danger{color:var(--bad);border-color:var(--bad)}
+.danger:hover:not(:disabled),.danger:focus-visible{background:var(--bad);color:var(--crt)}
+@media (max-width:440px){.crow{grid-template-columns:minmax(0,1fr) 4.4em 4.4em;font-size:1.05rem}.frow{font-size:1.1rem}}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -193,7 +222,7 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
   </header>
   <div class="opbar" id="opbar" hidden>
     <span>OPERATOR: <b id="opName">GUEST</b> <span class="sync" id="opSync"></span></span>
-    <span class="opbtns"><button class="linkbtn" id="statsBtn" type="button">[ STATS ]</button><button class="linkbtn" id="opBtn" type="button">[ LOG IN ]</button></span>
+    <span class="opbtns"><button class="linkbtn" id="statsBtn" type="button">[ STATS ]</button><button class="linkbtn" id="socialBtn" type="button" hidden>[ SOCIAL ]</button><button class="linkbtn" id="opBtn" type="button">[ LOG IN ]</button></span>
   </div>
   <div class="progress" id="progress" aria-label="Progress"></div>
   <main id="stage"></main>
@@ -522,8 +551,8 @@ function tick(){clearTimeout(tickTimer);if(!$("cd"))return;const t=new Date(toda
   tickTimer=setTimeout(tick,1000-(Date.now()%1000)+5)}
 
 // ---------- Stats (computed from the full history, so they match on every device) ----------
-function streaks(){
-  const days=Object.keys(data.history).filter(k=>data.history[k]&&data.history[k].done).sort();
+function streaks(hist=data.history){
+  const days=Object.keys(hist).filter(k=>hist[k]&&hist[k].done).sort();
   let best=0,run=0,prev=null;
   for(const k of days){run=(prev&&Math.round((parseYmd(k)-parseYmd(prev))/864e5)===1)?run+1:1;best=Math.max(best,run);prev=k}
   const y=new Date(today);y.setDate(y.getDate()-1);
@@ -608,6 +637,8 @@ function renderOperator(){
   $("opbar").hidden=false;
   $("opBtn").hidden=!cloudOn;
   $("statsBtn").hidden=!!session;
+  $("socialBtn").hidden=!session;
+  renderSocialBadge();
   if(!cloudOn)return;
   $("opName").textContent=session?(profile?.username||"…").toUpperCase():"GUEST";
   $("opBtn").textContent=session?"[ ACCOUNT ]":"[ LOG IN ]";
@@ -649,6 +680,7 @@ async function onSession(){
   syncedFor=session.user.id;
   try{await loadProfile();renderOperator();await syncAll();refresh()}
   catch(e){setSync("OFFLINE",true);syncedFor=null}
+  loadSocial().catch(()=>{});
   if(!profile)openPanel("username");
 }
 const ready=(async()=>{
@@ -658,21 +690,89 @@ const ready=(async()=>{
   sb.auth.onAuthStateChange((event,s)=>{
     // Run outside the callback: the auth client must not be awaited from inside it.
     setTimeout(async()=>{
-      if(event==="SIGNED_OUT"){session=null;profile=null;syncedFor=null;data={history:{}};save(data);renderOperator();refresh();return}
+      if(event==="SIGNED_OUT"){session=null;profile=null;syncedFor=null;social=emptySocial();data={history:{}};save(data);renderOperator();refresh();return}
       session=s;if(event==="SIGNED_IN"||event==="INITIAL_SESSION")await onSession();else renderOperator();
     },0);
   });
 })();
 
+// ---------- Social: friend requests and comparisons ----------
+const emptySocial=()=>({loaded:false,links:[],names:{},hist:{}});
+let social=emptySocial();
+const myId=()=>session?.user?.id;
+async function loadSocial(){
+  if(!sb||!session)return;
+  const{data:links,error}=await sb.from("friendships").select("requester,addressee,status,created_at");
+  if(error)throw error;
+  const m=myId(), other=l=>l.requester===m?l.addressee:l.requester;
+  const ids=[...new Set(links.map(other))], names={}, hist={};
+  if(ids.length){
+    const{data:ps,error:e1}=await sb.from("profiles").select("id,username").in("id",ids);
+    if(e1)throw e1;ps.forEach(p=>names[p.id]=p.username);
+    const friends=links.filter(l=>l.status==="accepted").map(other);
+    if(friends.length){
+      const{data:rows,error:e2}=await sb.from("results").select("user_id,day,picks,score,done,qids,ok").in("user_id",friends);
+      if(e2)throw e2;
+      friends.forEach(f=>hist[f]={});
+      rows.forEach(r=>{(hist[r.user_id]||(hist[r.user_id]={}))[r.day]=dayRecord(r)});
+    }
+  }
+  social={loaded:true,links,names,hist};
+  renderSocialBadge();
+}
+function socialLists(){
+  const m=myId(),L=social.links,other=l=>l.requester===m?l.addressee:l.requester;
+  const byName=(a,b)=>(social.names[a]||"").localeCompare(social.names[b]||"");
+  return{friends:L.filter(l=>l.status==="accepted").map(other).sort(byName),
+         incoming:L.filter(l=>l.status==="pending"&&l.addressee===m).map(l=>l.requester).sort(byName),
+         outgoing:L.filter(l=>l.status==="pending"&&l.requester===m).map(l=>l.addressee).sort(byName)};
+}
+function renderSocialBadge(){
+  const b=$("socialBtn");if(!b)return;
+  const n=session&&social.loaded?socialLists().incoming.length:0;
+  b.textContent=n?`[ SOCIAL • ${n} ]`:"[ SOCIAL ]";
+  b.setAttribute("aria-label",n?`Social, ${n} friend request${n===1?"":"s"}`:"Social");
+}
+const nameOf=id=>social.names[id]||"Unknown operator";
+const pairFilter=id=>`and(requester.eq.${myId()},addressee.eq.${id}),and(requester.eq.${id},addressee.eq.${myId()})`;
+async function sendRequest(raw){
+  const name=raw.trim();
+  if(!/^[A-Za-z0-9_]{3,16}$/.test(name))return{err:"Usernames are 3 to 16 letters, numbers or underscores."};
+  if(profile&&name.toLowerCase()===profile.username.toLowerCase())return{err:"That's you. Try a friend's username."};
+  const{data:p,error}=await sb.from("profiles").select("id,username").ilike("username",name.replace(/[\\%_]/g,c=>"\\"+c)).maybeSingle();
+  if(error)return{err:"Couldn't search right now. Check your connection."};
+  if(!p)return{err:`No operator named ${name}. Check the spelling.`};
+  social.names[p.id]=p.username;
+  const L=socialLists();
+  if(L.friends.includes(p.id))return{err:`You and ${p.username} are already friends.`};
+  if(L.outgoing.includes(p.id))return{err:`You already sent ${p.username} a request.`};
+  if(L.incoming.includes(p.id)){const r=await acceptRequest(p.id);return r.err?r:{ok:`${p.username} had already asked you. You're now friends.`}}
+  const{error:e2}=await sb.from("friendships").insert({requester:myId(),addressee:p.id});
+  if(e2)return{err:e2.code==="23505"?"There's already a request between you two. Tap REFRESH.":"Couldn't send the request. Try again."};
+  await loadSocial().catch(()=>{});
+  return{ok:`Request sent to ${p.username}. You'll see each other's stats once they accept.`};
+}
+async function acceptRequest(id){
+  const{error}=await sb.from("friendships").update({status:"accepted"}).eq("requester",id).eq("addressee",myId());
+  if(error)return{err:"Couldn't accept. Try again."};
+  await loadSocial().catch(()=>{});return{ok:`You and ${nameOf(id)} are now friends.`};
+}
+async function removeLink(id){
+  const{error}=await sb.from("friendships").delete().or(pairFilter(id));
+  if(error)return{err:"Couldn't update. Try again."};
+  delete social.hist[id];await loadSocial().catch(()=>{});return{ok:""};
+}
+function squares(h){return(h.ok||[]).map(o=>`<i class="${+o?"g":"b"}"></i>`).join("")}
+
 // ---------- Stats: computed from every answer saved in the history ----------
 const MIN_SAMPLE=3;
 function tally(){const g={};return{add(k,ok){(g[k]||(g[k]={n:0,c:0})).n++;g[k].c+=ok},get:k=>g[k]||{n:0,c:0},all:()=>g}}
-function computeStats(){
+function computeStats(hist=data.history){
   const seasons=tally(),types=tally(),chars=tally(),slots=tally();
   let n=0,c=0;
-  const days=Object.keys(data.history).sort();
+  const days=Object.keys(hist).sort();
   for(const k of days){
-    const h=data.history[k];if(!h||!h.qids)continue;
+    const h=hist[k];if(!h||!h.qids)continue;
     (h.ok||[]).forEach((o,i)=>{
       const bi=BY_ID[h.qids[i]];if(bi===undefined)return;
       const m=META[bi];o=+o;n++;c+=o;
@@ -681,9 +781,9 @@ function computeStats(){
       m.chars.forEach(ch=>chars.add(ch,o));
     });
   }
-  const games=days.filter(k=>data.history[k]?.done);
-  const dist=[0,0,0,0,0,0,0];games.forEach(k=>dist[data.history[k].score||0]++);
-  const{cur,best}=streaks();
+  const games=days.filter(k=>hist[k]?.done);
+  const dist=[0,0,0,0,0,0,0];games.forEach(k=>dist[hist[k].score||0]++);
+  const{cur,best}=streaks(hist);
   // Strengths and weaknesses: rank areas with enough answers by smoothed accuracy.
   const areas=[];
   for(const[s,v]of Object.entries(seasons.all()))areas.push({label:"Season "+s,...v});
@@ -741,6 +841,73 @@ function renderStatsPage(){
     <button class="btn quiet" id="pClose" type="button">[ CLOSE ]</button>`;
 }
 
+function renderSocialPage(note){
+  const L=socialLists(), me=profile?.username||"YOU";
+  const loading=!social.loaded;
+  const reqs=L.incoming.length?`<h3>REQUESTS (${L.incoming.length})</h3><div class="flist">${L.incoming.map(id=>`<div class="frow"><span class="fn">${esc(nameOf(id).toUpperCase())}</span><span class="fa"><button class="linkbtn act" data-act="accept" data-id="${id}" type="button">[ ACCEPT ]</button><button class="linkbtn act quietb" data-act="decline" data-id="${id}" type="button">[ DECLINE ]</button></span></div>`).join("")}</div>`:"";
+  const played=!!state.done;
+  const board=[{id:"me",name:me,h:data.history[key]},...L.friends.map(id=>({id,name:nameOf(id),h:social.hist[id]?.[key]}))]
+    .sort((a,b)=>(b.h?.done?b.h.score:-1)-(a.h?.done?a.h.score:-1)||a.name.localeCompare(b.name));
+  const boardRows=board.map(r=>{const done=r.h?.done, mine=r.id==="me";
+    const right=!done?`<span class="dimtxt">NOT PLAYED</span>`:(played||mine)?`<span class="sq">${squares(r.h)}</span><b>${r.h.score}/6</b>`:`<span class="dimtxt">PLAYED · HIDDEN</span>`;
+    return`<div class="frow${mine?" me":""}"><span class="fn">${esc(r.name.toUpperCase())}${mine?" (YOU)":""}</span><span class="fa">${right}</span></div>`}).join("");
+  const friendRows=L.friends.map(id=>{const S=streaks(social.hist[id]||{}),st=computeStats(social.hist[id]||{});
+    return`<button class="frow fbtn" data-act="compare" data-id="${id}" type="button"><span class="fn">${esc(nameOf(id).toUpperCase())}</span><span class="fa"><span class="dimtxt">STREAK</span> ${S.cur} <span class="dimtxt">ACC</span> ${pct(st.c,st.n)} <span class="chev">&gt;</span></span></button>`}).join("");
+  const sent=L.outgoing.length?`<h3>SENT REQUESTS</h3><div class="flist">${L.outgoing.map(id=>`<div class="frow"><span class="fn">${esc(nameOf(id).toUpperCase())}</span><span class="fa"><span class="dimtxt">PENDING</span><button class="linkbtn act quietb" data-act="cancel" data-id="${id}" type="button">[ CANCEL ]</button></span></div>`).join("")}</div>`:"";
+  return`<div class="stickybar"><button class="linkbtn backbtn" id="pBackTop" type="button" aria-label="Back to the game">[ &lt; ]</button><h2 id="panelTitle">SOCIAL</h2></div>
+    <p class="dimln">Add friends to compare scores and stats. You only see each other's results after a request is accepted.</p>
+    <h3>ADD A FRIEND</h3>
+    <form class="stack" id="pAddForm" novalidate>
+      <div class="field"><label for="pFriend">FRIEND'S USERNAME</label><input id="pFriend" type="text" maxlength="16" autocapitalize="off" autocomplete="off" spellcheck="false" required></div>
+      <button class="btn" type="submit">&gt; SEND REQUEST</button>
+    </form>
+    <p class="msg${note?.err?" err":""}" id="pMsg" aria-live="polite">${esc(note?.err||note?.ok||"")}</p>
+    ${loading?'<p class="dimln">LOADING FRIENDS...</p>':`${reqs}
+    <h3>TODAY'S BOARD · #${dayNo}</h3>
+    ${!played&&L.friends.length?'<p class="dimln">Finish today\'s orientation to see your friends\' scores.</p>':""}
+    <div class="flist">${boardRows}</div>
+    <h3>FRIENDS (${L.friends.length})</h3>
+    ${L.friends.length?`<div class="flist">${friendRows}</div>`:'<p class="dimln">No friends yet. Send a request above.</p>'}
+    ${sent}`}
+    <div class="stack"><button class="btn quiet" id="pRefresh" type="button">[ REFRESH ]</button><button class="btn quiet" id="pClose" type="button">[ CLOSE ]</button></div>`;
+}
+function cmpRow(label,a,b,fmt=v=>v,higherWins=true){
+  const av=a.val,bv=b.val,has=a.n!==0||b.n!==0;
+  const aw=has&&av!==null&&bv!==null&&(higherWins?av>bv:av<bv),bw=has&&av!==null&&bv!==null&&(higherWins?bv>av:bv<av);
+  return`<div class="crow"><span class="cl">${esc(label)}</span><span class="cv${aw?" win":bw?" lose":""}">${av===null?"–":fmt(av)}</span><span class="cv${bw?" win":aw?" lose":""}">${bv===null?"–":fmt(bv)}</span></div>`;
+}
+const accV=v=>v.n?{val:Math.round(v.c/v.n*100),n:v.n}:{val:null,n:0};
+const numV=x=>({val:x,n:1});
+function renderFriendPage(id){
+  const fh=social.hist[id]||{}, A=computeStats(), B=computeStats(fh), sa=streaks(), sb2=streaks(fh);
+  const them=nameOf(id).toUpperCase(), me=(profile?.username||"YOU").toUpperCase();
+  const avg=(S,h)=>S.games.length?Math.round(S.games.reduce((s,k)=>s+(h[k].score||0),0)/S.games.length*10)/10:null;
+  let w=0,l=0,d=0;Object.keys(data.history).forEach(k=>{const x=data.history[k],y=fh[k];if(x?.done&&y?.done){x.score>y.score?w++:x.score<y.score?l++:d++}});
+  const P=v=>v+"%";
+  const head=`<div class="crow chead"><span class="cl"></span><span class="cv">${esc(me.slice(0,9))}</span><span class="cv">${esc(them.slice(0,9))}</span></div>`;
+  const overview=[cmpRow("Games",numV(A.games.length),numV(B.games.length)),cmpRow("Accuracy",accV({c:A.c,n:A.n}),accV({c:B.c,n:B.n}),P),
+    cmpRow("Avg score",numV(avg(A,data.history)),numV(avg(B,fh))),cmpRow("Perfect 6/6",numV(A.perfect),numV(B.perfect)),
+    cmpRow("Streak",numV(sa.cur),numV(sb2.cur)),cmpRow("Best streak",numV(sa.best),numV(sb2.best))].join("");
+  const td=data.history[key],fd=fh[key];
+  const today=!fd?.done?`<p class="dimln">${esc(them)} hasn't played today yet.</p>`:!td?.done?`<p class="dimln">${esc(them)} has played. Finish yours to see the score.</p>`
+    :`<div class="flist"><div class="frow me"><span class="fn">${esc(me)}</span><span class="fa"><span class="sq">${squares(td)}</span><b>${td.score}/6</b></span></div><div class="frow"><span class="fn">${esc(them)}</span><span class="fa"><span class="sq">${squares(fd)}</span><b>${fd.score}/6</b></span></div></div>`;
+  const seasons=[1,2,3,4,5,6].map(s=>cmpRow("Season "+s,accV(A.seasons.get(s)),accV(B.seasons.get(s)),P)).join("");
+  const types=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline"].map(t=>cmpRow(t,accV(A.types.get(t)),accV(B.types.get(t)),P)).join("");
+  const chs=[...new Set([...Object.keys(A.chars.all()),...Object.keys(B.chars.all())])].map(ch=>[ch,A.chars.get(ch).n+B.chars.get(ch).n]).sort((a,b)=>b[1]-a[1]).slice(0,10)
+    .map(([ch])=>cmpRow(ch,accV(A.chars.get(ch)),accV(B.chars.get(ch)),P)).join("");
+  const sw=B.n<MIN_SAMPLE*3?`<p class="dimln">Not enough data on ${esc(them)} yet.</p>`:`<div class="sw"><div><p class="swh">STRENGTHS</p>${B.strengths.map(a=>`<p class="swi good">+ ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join("")||'<p class="swi dimln">None yet.</p>'}</div><div><p class="swh">WEAK SPOTS</p>${B.weaknesses.map(a=>`<p class="swi bad">− ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join("")||'<p class="swi dimln">None found.</p>'}</div></div>`;
+  return`<div class="stickybar"><button class="linkbtn backbtn" id="pBackTop" type="button" aria-label="Back to Social">[ &lt; ]</button><h2 id="panelTitle">${esc(me)} VS ${esc(them)}</h2></div>
+    <p class="dimln">Head to head on days you both played: <b class="hh">${w}W ${l}L ${d}D</b></p>
+    <h3>TODAY · #${dayNo}</h3>${today}
+    <h3>OVERVIEW</h3><div class="crows">${head}${overview}</div>
+    <h3>BY SEASON</h3><div class="crows">${head}${seasons}</div>
+    <h3>BY QUESTION TYPE</h3><div class="crows">${head}${types}</div>
+    ${chs?`<h3>BY CHARACTER</h3><div class="crows">${head}${chs}</div>`:""}
+    <h3>${esc(them)}'S STRENGTHS &amp; WEAK SPOTS</h3>${sw}
+    <p class="msg" id="pMsg" aria-live="polite"></p>
+    <div class="stack"><button class="btn quiet danger" id="pRemove" type="button">[ REMOVE FRIEND ]</button><button class="btn quiet" id="pBackBottom" type="button">[ BACK TO SOCIAL ]</button></div>`;
+}
+
 // ---------- Account panel ----------
 let lastFocus=null, pendingEmail="";
 // Google's own sign-in button: the popup names this site, and the login never leaves the page.
@@ -768,13 +935,14 @@ async function mountGoogleButton(fallback){
 function closePanel(){$("panel").hidden=true;document.body.style.overflow="";lastFocus?.focus?.()}
 function panelMsg(t,err){const m=$("pMsg");if(m){m.textContent=t||"";m.classList.toggle("err",!!err)}}
 function busy(on){$("panelBody").querySelectorAll("button,input").forEach(el=>el.disabled=on)}
-function openPanel(kind){
+function openPanel(kind,arg){
   if(kind==="account")kind="stats";
   if(!cloudOn&&kind!=="stats")return;
+  if((kind==="social"||kind==="friend")&&!session){kind="login"}
   if($("panel").hidden)lastFocus=document.activeElement;
   $("panel").hidden=false;document.body.style.overflow="hidden";
   const P=$("panelBody"), prov=CFG.providers||{};
-  P.classList.toggle("wide",kind==="stats");P.scrollTop=0;$("panel").scrollTop=0;
+  P.classList.toggle("wide",kind==="stats"||kind==="social"||kind==="friend");P.scrollTop=0;$("panel").scrollTop=0;
   const redirectTo=location.origin+location.pathname;
   if(kind==="login"){
     P.innerHTML=`<h2 id="panelTitle">IDENTIFY YOURSELF</h2>
@@ -855,9 +1023,45 @@ function openPanel(kind){
     $("pLogin")&&($("pLogin").onclick=()=>openPanel("login"));
     const h=$("panelTitle");h.tabIndex=-1;h.focus({preventScroll:true});
   }
+  else if(kind==="social"){
+    const draw=(note,keepFocus)=>{
+      if($("panel").hidden)return;
+      const typed=$("pFriend")?.value||"", y=$("panel").scrollTop;
+      P.innerHTML=renderSocialPage(note);
+      $("pFriend").value=typed;$("panel").scrollTop=y;
+      $("pBackTop").onclick=closePanel;$("pClose").onclick=closePanel;
+      $("pRefresh").onclick=async()=>{busy(true);panelMsg("REFRESHING...");try{await loadSocial();draw({ok:"Up to date."})}catch(e){draw({err:"Couldn't refresh. Check your connection."})}};
+      $("pAddForm").onsubmit=async e=>{e.preventDefault();busy(true);panelMsg("SEARCHING...");
+        const r=await sendRequest($("pFriend").value);if(r.ok)$("pFriend").value="";draw(r,true);$("pFriend").focus()};
+      P.querySelectorAll("[data-act]").forEach(b=>b.onclick=async()=>{
+        const id=b.dataset.id,act=b.dataset.act;
+        if(act==="compare"){openPanel("friend",id);return}
+        busy(true);panelMsg("UPDATING...");
+        const r=act==="accept"?await acceptRequest(id):await removeLink(id);
+        draw(r.err?r:{ok:act==="accept"?r.ok:act==="decline"?"Request declined.":"Request cancelled."});
+      });
+      if(!keepFocus){const h=$("panelTitle");h.tabIndex=-1;h.focus({preventScroll:true})}
+    };
+    draw();
+    loadSocial().then(()=>draw(null,true)).catch(()=>draw({err:"Couldn't load friends. Check your connection."},true));
+  }
+  else if(kind==="friend"){
+    P.innerHTML=renderFriendPage(arg);
+    const back=()=>openPanel("social");
+    $("pBackTop").onclick=back;$("pBackBottom").onclick=back;
+    let armed=false;
+    $("pRemove").onclick=async()=>{
+      if(!armed){armed=true;$("pRemove").textContent=`[ TAP AGAIN TO REMOVE ${nameOf(arg).toUpperCase()} ]`;return}
+      busy(true);panelMsg("REMOVING...");const r=await removeLink(arg);
+      if(r.err){busy(false);panelMsg(r.err,true);return}
+      openPanel("social");
+    };
+    const h=$("panelTitle");h.tabIndex=-1;h.focus({preventScroll:true});
+  }
 }
 $("opBtn").onclick=()=>openPanel(session?"stats":"login");
 $("statsBtn").onclick=()=>openPanel("stats");
+$("socialBtn").onclick=()=>openPanel("social");
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("panel").hidden&&(profile||!session))closePanel()});
 
 // ---------- PWA: offline cache and install prompts ----------
