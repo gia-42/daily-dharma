@@ -1,6 +1,6 @@
 {
   "name": "Daily Dharma",
-  "short_name": "Dharma",
+  "short_name": "Daily Dharma",
   "description": "A daily LOST trivia quiz. Six questions a day, one for each of the Numbers.",
   "start_url": "./",
   "scope": "./",
@@ -9,8 +9,23 @@
   "background_color": "#050605",
   "theme_color": "#050605",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

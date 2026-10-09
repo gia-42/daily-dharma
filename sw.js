@@ -1,6 +1,6 @@
 // Daily Dharma service worker: makes the game installable and playable offline.
 // Change VERSION whenever you upload new files so every player gets them.
-const VERSION = "dharma-v3";
+const VERSION = "dharma-v4";
 const SHELL = [
   "./",
   "./index.html",
@@ -35,7 +35,8 @@ self.addEventListener("fetch", e => {
   // The game's own files: try the network first so updates arrive, fall back to the cache offline.
   if (url.origin === location.origin) {
     e.respondWith(
-      fetch(req)
+      // "no-cache" asks GitHub whether a file changed, so edits to config.js show up right away.
+      fetch(req.mode === "navigate" ? req.url : req, { cache: "no-cache" })
         .then(res => {
           if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(req, copy)); }
           return res;
