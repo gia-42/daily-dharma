@@ -146,6 +146,33 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .msg{min-height:1.2em;font-size:1.05rem}
 .msg.err{color:var(--bad)}
 .install{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.95rem;color:var(--dim)}
+.panel .screen.wide{max-width:600px}
+.panel h3{font-weight:400;font-size:1.25rem;letter-spacing:.08em;margin:10px 0 0;padding-top:12px;border-top:1px dashed var(--dim)}
+.panel h3::before{content:">: ";color:var(--dim)}
+.opbtns{display:flex;gap:6px;flex-wrap:wrap}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.tile{border:1px solid var(--rule);padding:8px 4px;display:flex;flex-direction:column}
+.tile b{font-weight:400;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums}
+.tile span{font-size:.85rem;color:var(--dim)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.day{border:1px solid var(--phos);padding:4px 0;display:flex;flex-direction:column}
+.day.off{border-color:var(--rule);color:var(--dim)}
+.day b{font-weight:400;font-size:1.5rem;line-height:1}
+.day span{font-size:.8rem;color:var(--dim)}
+.srows{display:grid;gap:2px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto 3.2em 3.4em;gap:8px;align-items:baseline;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.srow .sl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow .sb{color:var(--phos);letter-spacing:-.05em;white-space:nowrap}
+.srow .sp{text-align:right;white-space:nowrap}
+.srow .sn{white-space:nowrap}
+.srow .sn{color:var(--dim);font-size:.95rem}
+.srow.none{color:var(--dim)}.srow.none .sb{color:var(--rule)}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.swh{color:var(--dim);font-size:1rem;margin:0 0 4px}
+.swi{margin:0;font-size:1.15rem}
+.swi span{color:var(--dim)}
+.swi.bad{color:var(--bad)}
+@media (max-width:440px){.srow{grid-template-columns:minmax(0,1fr) auto 2.9em 3em;gap:6px;font-size:1rem}.sw{grid-template-columns:1fr}.tile b{font-size:1.6rem}}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -161,7 +188,7 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
   </header>
   <div class="opbar" id="opbar" hidden>
     <span>OPERATOR: <b id="opName">GUEST</b> <span class="sync" id="opSync"></span></span>
-    <button class="linkbtn" id="opBtn" type="button">[ LOG IN ]</button>
+    <span class="opbtns"><button class="linkbtn" id="statsBtn" type="button">[ STATS ]</button><button class="linkbtn" id="opBtn" type="button">[ LOG IN ]</button></span>
   </div>
   <div class="progress" id="progress" aria-label="Progress"></div>
   <main id="stage"></main>
@@ -299,56 +326,56 @@ const BANK=[
 [S6,"What is the name of Jack's son in the sideways world?","David","Aaron","Walt","Charlie"],
 [S6,"Who greets Jack in the church in the finale?","Christian Shephard","Jacob","Desmond Hume","Eloise Hawking"],
 // Complete the quote
-["Complete the Quote","Jack, season 1: “Live together, ___.”","die alone","or not at all","as one","until we're rescued"],
-["Complete the Quote","Desmond: “See you in another ___, brother.”","life","world","time","place"],
-["Complete the Quote","Charlie, at the end of the pilot: “Guys… where ___?”","are we","is Jack","is the plane","did they go"],
-["Complete the Quote","Christian Shephard to Jack in the finale: “Everybody dies sometime, ___.”","kiddo","son","Jack","buddy"],
-["Complete the Quote","Juliet's last words to Sawyer: “It ___.”","worked","ends","hurts","doesn't matter"],
-["Complete the Quote","Ben asks “What about me?” and Jacob answers: “What about ___?”","you","me","the island","your father"],
-["Complete the Quote","The Others insist to Michael: “We're the good ___.”","guys","people","ones","side"],
-["Complete the Quote","Locke, again and again: “We were brought here for a ___.”","reason","test","price","rescue"],
-["Complete the Quote","Jacob: “It only ends once. Anything that happens before that is just ___.”","progress","a test","a dream","the beginning"],
+["Complete the Quote","Jack, season 1: “Live together, ___.”","die alone","or not at all","as one","until we're rescued",1],
+["Complete the Quote","Desmond: “See you in another ___, brother.”","life","world","time","place",2],
+["Complete the Quote","Charlie, at the end of the pilot: “Guys… where ___?”","are we","is Jack","is the plane","did they go",1],
+["Complete the Quote","Christian Shephard to Jack in the finale: “Everybody dies sometime, ___.”","kiddo","son","Jack","buddy",6],
+["Complete the Quote","Juliet's last words to Sawyer: “It ___.”","worked","ends","hurts","doesn't matter",6],
+["Complete the Quote","Ben asks “What about me?” and Jacob answers: “What about ___?”","you","me","the island","your father",5],
+["Complete the Quote","The Others insist to Michael: “We're the good ___.”","guys","people","ones","side",2],
+["Complete the Quote","Locke, again and again: “We were brought here for a ___.”","reason","test","price","rescue",1],
+["Complete the Quote","Jacob: “It only ends once. Anything that happens before that is just ___.”","progress","a test","a dream","the beginning",5],
 // Who said it
-["Who Said It","“I've looked into the eye of this island, and what I saw was beautiful.”","John Locke","Jacob","Ben Linus","Mr. Eko"],
-["Who Said It","“Do not mistake coincidence for fate.”","Mr. Eko","John Locke","Richard Alpert","Rose"],
-["Who Said It","“The universe has a way of course correcting.”","Eloise Hawking","Daniel Faraday","Jacob","Charles Widmore"],
-["Who Said It","Who tells Desmond that he needs to find a “constant”?","Daniel Faraday","Eloise Hawking","Penny Widmore","Charlie Pace"],
-["Who Said It","Who calls himself a “man of science” in his clash with Locke, the “man of faith”?","Jack Shephard","Daniel Faraday","Sayid Jarrah","Ben Linus"],
-["Who Said It","Whose go-to word for every situation is “dude”?","Hurley","Charlie","Sawyer","Frank Lapidus"],
-["Who Said It","Whose trademark exclamation is “Son of a…!”?","Sawyer","Jack","Charlie","Miles"],
-["Who Said It","Which group greets each other with “Namaste”?","The Dharma Initiative","The Others","The tail section","Widmore's crew"],
-["Who Said It","What does the voice in the cabin whisper to Locke?","“Help me.”","“Run.”","“Go back.”","“Find me.”"],
+["Who Said It","“I've looked into the eye of this island, and what I saw was beautiful.”","John Locke","Jacob","Ben Linus","Mr. Eko",1],
+["Who Said It","“Do not mistake coincidence for fate.”","Mr. Eko","John Locke","Richard Alpert","Rose",2],
+["Who Said It","“The universe has a way of course correcting.”","Eloise Hawking","Daniel Faraday","Jacob","Charles Widmore",3],
+["Who Said It","Who tells Desmond that he needs to find a “constant”?","Daniel Faraday","Eloise Hawking","Penny Widmore","Charlie Pace",4],
+["Who Said It","Who calls himself a “man of science” in his clash with Locke, the “man of faith”?","Jack Shephard","Daniel Faraday","Sayid Jarrah","Ben Linus",2],
+["Who Said It","Whose go-to word for every situation is “dude”?","Hurley","Charlie","Sawyer","Frank Lapidus",0],
+["Who Said It","Whose trademark exclamation is “Son of a…!”?","Sawyer","Jack","Charlie","Miles",0],
+["Who Said It","Which group greets each other with “Namaste”?","The Dharma Initiative","The Others","The tail section","Widmore's crew",0],
+["Who Said It","What does the voice in the cabin whisper to Locke?","“Help me.”","“Run.”","“Go back.”","“Find me.”",3],
 // Episode titles
-["Episode Titles","What is the season 1 finale called?","Exodus","Outlaws","Deus Ex Machina","Homecoming"],
-["Episode Titles","What is the season 2 finale called?","Live Together, Die Alone","Man of Science, Man of Faith","Three Minutes","The Hunting Party"],
-["Episode Titles","What is the season 3 finale called?","Through the Looking Glass","The Man Behind the Curtain","Greatest Hits","Not in Portland"],
-["Episode Titles","What is the season 4 finale called?","There's No Place Like Home","The Constant","Cabin Fever","Meet Kevin Johnson"],
-["Episode Titles","What is the season 5 finale called?","The Incident","Follow the Leader","LaFleur","The Variable"],
-["Episode Titles","What is the series finale called?","The End","The Candidate","What They Died For","Across the Sea"],
-["Episode Titles","In which episode does Desmond's mind jump between 1996 and 2004?","The Constant","The Variable","Flashes Before Your Eyes","Catch-22"],
-["Episode Titles","Which season 1 episode reveals that Locke used a wheelchair?","Walkabout","Deus Ex Machina","White Rabbit","Outlaws"],
-["Episode Titles","Which season 1 episode reveals Hurley won the lottery with the Numbers?","Numbers","Solitary","Homecoming","Hearts and Minds"],
-["Episode Titles","Which episode tells Richard Alpert's backstory?","Ab Aeterno","Dr. Linus","Recon","The Package"],
-["Episode Titles","Which episode shows Jacob and the Man in Black as children?","Across the Sea","The Substitute","Lighthouse","Sundown"],
-["Episode Titles","Which episode follows Locke off the Island using his alias?","The Life and Death of Jeremy Bentham","This Place Is Death","Namaste","Dead Is Dead"],
-["Episode Titles","In which episode is Alex killed by Keamy?","The Shape of Things to Come","Cabin Fever","Eggtown","Ji Yeon"],
-["Episode Titles","In which episode does Hurley get the Dharma van running?","Tricia Tanaka Is Dead","Every Man for Himself","Par Avion","Enter 77"],
-["Episode Titles","Which season 3 episode sends Desmond back to his past life in London?","Flashes Before Your Eyes","The Constant","Catch-22","The Brig"],
-["Episode Titles","What is the season 2 premiere called?","Man of Science, Man of Faith","Adrift","Orientation","What Kate Did"],
-["Episode Titles","What is the first Sawyer-centric episode called?","Confidence Man","Outlaws","The Long Con","Every Man for Himself"],
+["Episode Titles","What is the season 1 finale called?","Exodus","Outlaws","Deus Ex Machina","Homecoming",1],
+["Episode Titles","What is the season 2 finale called?","Live Together, Die Alone","Man of Science, Man of Faith","Three Minutes","The Hunting Party",2],
+["Episode Titles","What is the season 3 finale called?","Through the Looking Glass","The Man Behind the Curtain","Greatest Hits","Not in Portland",3],
+["Episode Titles","What is the season 4 finale called?","There's No Place Like Home","The Constant","Cabin Fever","Meet Kevin Johnson",4],
+["Episode Titles","What is the season 5 finale called?","The Incident","Follow the Leader","LaFleur","The Variable",5],
+["Episode Titles","What is the series finale called?","The End","The Candidate","What They Died For","Across the Sea",6],
+["Episode Titles","In which episode does Desmond's mind jump between 1996 and 2004?","The Constant","The Variable","Flashes Before Your Eyes","Catch-22",4],
+["Episode Titles","Which season 1 episode reveals that Locke used a wheelchair?","Walkabout","Deus Ex Machina","White Rabbit","Outlaws",1],
+["Episode Titles","Which season 1 episode reveals Hurley won the lottery with the Numbers?","Numbers","Solitary","Homecoming","Hearts and Minds",1],
+["Episode Titles","Which episode tells Richard Alpert's backstory?","Ab Aeterno","Dr. Linus","Recon","The Package",6],
+["Episode Titles","Which episode shows Jacob and the Man in Black as children?","Across the Sea","The Substitute","Lighthouse","Sundown",6],
+["Episode Titles","Which episode follows Locke off the Island using his alias?","The Life and Death of Jeremy Bentham","This Place Is Death","Namaste","Dead Is Dead",5],
+["Episode Titles","In which episode is Alex killed by Keamy?","The Shape of Things to Come","Cabin Fever","Eggtown","Ji Yeon",4],
+["Episode Titles","In which episode does Hurley get the Dharma van running?","Tricia Tanaka Is Dead","Every Man for Himself","Par Avion","Enter 77",3],
+["Episode Titles","Which season 3 episode sends Desmond back to his past life in London?","Flashes Before Your Eyes","The Constant","Catch-22","The Brig",3],
+["Episode Titles","What is the season 2 premiere called?","Man of Science, Man of Faith","Adrift","Orientation","What Kate Did",2],
+["Episode Titles","What is the first Sawyer-centric episode called?","Confidence Man","Outlaws","The Long Con","Every Man for Himself",1],
 // Timeline
-["Timeline","In which season does Boone die?","Season 1","Season 2","Season 3","Season 4"],
-["Timeline","In which season does Shannon die?","Season 2","Season 1","Season 3","Season 4"],
-["Timeline","In which season do Ana Lucia and Libby die?","Season 2","Season 1","Season 3","Season 4"],
-["Timeline","In which season does Desmond first appear?","Season 2","Season 1","Season 3","Season 4"],
-["Timeline","In which season does Charlie die?","Season 3","Season 2","Season 4","Season 5"],
-["Timeline","In which season is Mr. Eko killed by the Monster?","Season 3","Season 2","Season 4","Season 1"],
-["Timeline","In which season does Juliet first appear?","Season 3","Season 2","Season 4","Season 5"],
-["Timeline","In which season's finale is the first flash-forward revealed?","Season 3","Season 2","Season 4","Season 1"],
-["Timeline","In which season does Ben move the Island?","Season 4","Season 3","Season 5","Season 6"],
-["Timeline","In which season is Alex killed?","Season 4","Season 3","Season 5","Season 2"],
-["Timeline","In which season is Daniel Faraday shot by his mother?","Season 5","Season 4","Season 6","Season 3"],
-["Timeline","In which season does Sayid die on the submarine?","Season 6","Season 5","Season 4","Season 3"],
+["Timeline","In which season does Boone die?","Season 1","Season 2","Season 3","Season 4",1],
+["Timeline","In which season does Shannon die?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season do Ana Lucia and Libby die?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season does Desmond first appear?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season does Charlie die?","Season 3","Season 2","Season 4","Season 5",3],
+["Timeline","In which season is Mr. Eko killed by the Monster?","Season 3","Season 2","Season 4","Season 1",3],
+["Timeline","In which season does Juliet first appear?","Season 3","Season 2","Season 4","Season 5",3],
+["Timeline","In which season's finale is the first flash-forward revealed?","Season 3","Season 2","Season 4","Season 1",3],
+["Timeline","In which season does Ben move the Island?","Season 4","Season 3","Season 5","Season 6",4],
+["Timeline","In which season is Alex killed?","Season 4","Season 3","Season 5","Season 2",4],
+["Timeline","In which season is Daniel Faraday shot by his mother?","Season 5","Season 4","Season 6","Season 3",5],
+["Timeline","In which season does Sayid die on the submarine?","Season 6","Season 5","Season 4","Season 3",6],
 ];
 
 const NUMS=[4,8,15,16,23,42], PER_DAY=6, EPOCH=new Date(2026,9,9); // day #1
@@ -359,23 +386,41 @@ const dayNo=Math.max(1,Math.round((today-EPOCH)/864e5)+1);
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const parseYmd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
 const key=ymd(today);
+// ---------- Question tags (season, characters, type) for the stats page ----------
+function qid(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)}return(h>>>0).toString(36)}
+const CHARS=[["Jack",/\bJack\b|\bShephard\b/],["Kate",/\bKate\b/],["Sawyer",/\bSawyer\b|James Ford|LaFleur/],["Locke",/\bLocke\b|Jeremy Bentham/],
+  ["Hurley",/\bHurley\b|\bHugo\b|\bReyes\b/],["Sayid",/\bSayid\b/],["Charlie",/\bCharlie\b/],["Claire",/\bClaire\b/],["Jin",/\bJin\b/],["Sun",/\bSun\b/],
+  ["Michael",/\bMichael\b|Kevin Johnson/],["Walt",/\bWalt\b/],["Desmond",/\bDesmond\b/],["Penny",/\bPenny\b/],["Ben",/\bBen\b|Henry Gale|\bLinus\b/],
+  ["Juliet",/\bJuliet\b/],["Richard",/\bRichard\b/],["Jacob",/\bJacob\b/],["Man in Black",/Man in Black/],["Faraday",/Faraday/],["Miles",/\bMiles\b/],
+  ["Charlotte",/\bCharlotte\b/],["Frank",/Lapidus|\bFrank\b/],["Widmore",/\bWidmore\b/],["Eloise",/Eloise|Hawking/],["Rose & Bernard",/\bRose\b|\bBernard\b/],
+  ["Ana Lucia",/Ana Lucia/],["Mr. Eko",/\bEko\b/],["Libby",/\bLibby\b/],["Shannon",/\bShannon\b/],["Boone",/\bBoone\b/],["Rousseau",/Rousseau|\bAlex\b/]];
+function tagsFor(b){
+  const text=b[1]+" "+b[2], plain=text.replace(/Christian Shephard/g,""), chars=[];
+  if(/Christian/.test(text))chars.push("Christian");
+  for(const[n,re]of CHARS)if(re.test(plain)&&!chars.includes(n))chars.push(n);
+  const m=/^Season (\d)/.exec(b[0]);
+  return{chars,season:m?+m[1]:(b[6]||0),type:m?"Island Trivia":b[0]};
+}
+const META=BANK.map(b=>({id:qid(b[1]),...tagsFor(b)}));
+const BY_ID=Object.fromEntries(META.map((m,i)=>[m.id,i]));
+function makeQ(bi,n,qi){const b=BANK[bi],opts=shuffle([b[2],b[3],b[4],b[5]],n*108+qi+42);return{...META[bi],era:b[0],q:b[1],opts,answer:opts.indexOf(b[2])}}
 function questionsFor(n){
   const per=Math.floor(BANK.length/PER_DAY), idx=n-1, round=Math.floor(idx/per), slot=idx%per;
-  const order=shuffle(BANK.map((_,i)=>i),1977+round*42815);
-  return order.slice(slot*PER_DAY,slot*PER_DAY+PER_DAY).map((bi,qi)=>{
-    const b=BANK[bi]; const opts=shuffle([b[2],b[3],b[4],b[5]],n*316+qi+15);
-    return{era:b[0],q:b[1],opts,answer:opts.indexOf(b[2])};
-  });
+  const order=shuffle(BANK.map((_,i)=>i),815+round*4242);
+  return order.slice(slot*PER_DAY,slot*PER_DAY+PER_DAY).map((bi,qi)=>makeQ(bi,n,qi));
 }
-const QS=questionsFor(dayNo);
+// A day already started keeps its exact questions, even if the bank grows later.
+function questionsFromIds(ids,n){if(!ids||ids.length!==PER_DAY||!ids.every(id=>id in BY_ID))return null;return ids.map((id,qi)=>makeQ(BY_ID[id],n,qi))}
+let QS=questionsFor(dayNo);
 
 // ---------- Local store (cache on this device; the cloud copy wins when logged in) ----------
-const LS="dailyDharma.v2";   // stats reset on Oct 9, 2026: the old store is ignored
-try{localStorage.removeItem("dailyDharma")}catch(e){}
+const LS="dailyDharma.v3";   // stats reset on Oct 9, 2026: older stores are ignored
+try{localStorage.removeItem("dailyDharma");localStorage.removeItem("dailyDharma.v2")}catch(e){}
 function load(){try{const d=JSON.parse(localStorage.getItem(LS)||"{}");d.history=d.history||{};return d}catch(e){return{history:{}}}}
 function save(d){try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){}}
 let data=load();
 let state=data.history[key]||{picks:[],done:false,score:0};
+QS=questionsFromIds(state.qids,dayNo)||QS;
 
 const $=id=>document.getElementById(id), stage=$("stage");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -385,7 +430,11 @@ $("datestr").textContent=today.toLocaleDateString(undefined,{weekday:"short",day
 const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function score(){return state.picks.reduce((s,p,i)=>s+(p===QS[i].answer?1:0),0)}
-function persist(){state.score=score();data.history[key]=state;save(data);pushDay(key)}
+function persist(){
+  state.qids=QS.map(q=>q.id);
+  state.ok=state.picks.map((p,i)=>p===QS[i].answer?1:0);
+  state.score=score();data.history[key]=state;save(data);pushDay(key);
+}
 
 // ---------- Game screens ----------
 let view="intro";
@@ -534,6 +583,7 @@ async function start(){
 // Redraw whatever is on screen after the history changes (login, sync, logout).
 function refresh(){
   state=data.history[key]||{picks:[],done:false,score:0};
+  QS=questionsFromIds(state.qids,dayNo)||questionsFor(dayNo);
   stats();
   if(view==="intro"){if(introSkipped&&$("l3")){const s=introStatus();$("l3").textContent=s.status;$("startBtn").textContent=s.label}return}
   pips();
@@ -550,24 +600,27 @@ let session=null, profile=null, syncedFor=null;
 
 function setSync(text,err){const el=$("opSync");el.textContent=text?`· ${text}`:"";el.classList.toggle("err",!!err)}
 function renderOperator(){
-  if(!cloudOn){$("opbar").hidden=true;return}
   $("opbar").hidden=false;
+  $("opBtn").hidden=!cloudOn;
+  $("statsBtn").hidden=!!session;
+  if(!cloudOn)return;
   $("opName").textContent=session?(profile?.username||"…").toUpperCase():"GUEST";
   $("opBtn").textContent=session?"[ ACCOUNT ]":"[ LOG IN ]";
   if(!session)setSync("");
 }
 const better=(a,b)=>{if(!a)return b;if(!b)return a;if(!!a.done!==!!b.done)return a.done?a:b;return(a.picks?.length||0)>=(b.picks?.length||0)?a:b};
-const sameDay=(a,b)=>a&&b&&!!a.done===!!b.done&&(a.picks||[]).join()===(b.picks||[]).join();
+const sameDay=(a,b)=>a&&b&&!!a.done===!!b.done&&(a.picks||[]).join()===(b.picks||[]).join()&&(a.qids||[]).join()===(b.qids||[]).join();
+const dayRecord=w=>({picks:[...(w.picks||[])],score:w.score||0,done:!!w.done,qids:[...(w.qids||[])],ok:(w.ok||[]).map(Number)});
 
 async function syncAll(){
   const uid=session.user.id;setSync("SYNCING");
-  const{data:rows,error}=await sb.from("results").select("day,picks,score,done").eq("user_id",uid);
+  const{data:rows,error}=await sb.from("results").select("day,picks,score,done,qids,ok").eq("user_id",uid);
   if(error)throw error;
-  const remote={};rows.forEach(r=>remote[r.day]={picks:r.picks||[],score:r.score||0,done:!!r.done});
+  const remote={};rows.forEach(r=>remote[r.day]=dayRecord(r));
   const up=[];
   new Set([...Object.keys(remote),...Object.keys(data.history)]).forEach(k=>{
     const l=data.history[k],r=remote[k],w=better(l,r);
-    data.history[k]={picks:[...(w.picks||[])],score:w.score||0,done:!!w.done};
+    data.history[k]=dayRecord(w);
     if(!sameDay(data.history[k],r))up.push({user_id:uid,day:k,...data.history[k]});
   });
   if(up.length){const{error:e2}=await sb.from("results").upsert(up,{onConflict:"user_id,day"});if(e2)throw e2}
@@ -576,7 +629,7 @@ async function syncAll(){
 let pushChain=Promise.resolve();
 function pushDay(k){
   if(!sb||!session)return;
-  const row={user_id:session.user.id,day:k,picks:data.history[k].picks,score:data.history[k].score||0,done:!!data.history[k].done};
+  const row={user_id:session.user.id,day:k,...dayRecord(data.history[k])};
   setSync("SAVING");
   pushChain=pushChain.then(()=>sb.from("results").upsert(row,{onConflict:"user_id,day"})).then(({error})=>setSync(error?"NOT SAVED":"SYNCED",!!error)).catch(()=>setSync("OFFLINE",true));
 }
@@ -606,6 +659,83 @@ const ready=(async()=>{
   });
 })();
 
+// ---------- Stats: computed from every answer saved in the history ----------
+const MIN_SAMPLE=3;
+function tally(){const g={};return{add(k,ok){(g[k]||(g[k]={n:0,c:0})).n++;g[k].c+=ok},get:k=>g[k]||{n:0,c:0},all:()=>g}}
+function computeStats(){
+  const seasons=tally(),types=tally(),chars=tally(),slots=tally();
+  let n=0,c=0;
+  const days=Object.keys(data.history).sort();
+  for(const k of days){
+    const h=data.history[k];if(!h||!h.qids)continue;
+    (h.ok||[]).forEach((o,i)=>{
+      const bi=BY_ID[h.qids[i]];if(bi===undefined)return;
+      const m=META[bi];o=+o;n++;c+=o;
+      if(m.season)seasons.add(m.season,o);
+      types.add(m.type,o);slots.add(i,o);
+      m.chars.forEach(ch=>chars.add(ch,o));
+    });
+  }
+  const games=days.filter(k=>data.history[k]?.done);
+  const dist=[0,0,0,0,0,0,0];games.forEach(k=>dist[data.history[k].score||0]++);
+  const{cur,best}=streaks();
+  // Strengths and weaknesses: rank areas with enough answers by smoothed accuracy.
+  const areas=[];
+  for(const[s,v]of Object.entries(seasons.all()))areas.push({label:"Season "+s,...v});
+  for(const[s,v]of Object.entries(types.all()))areas.push({label:s,...v});
+  for(const[s,v]of Object.entries(chars.all()))areas.push({label:s,...v});
+  const ranked=areas.filter(a=>a.n>=MIN_SAMPLE).map(a=>({...a,p:a.c/a.n,r:(a.c+1)/(a.n+2)})).sort((a,b)=>b.r-a.r||b.n-a.n);
+  const strengths=ranked.filter(a=>a.p>=0.6).slice(0,3);
+  const weaknesses=ranked.filter(a=>a.p<0.6&&!strengths.includes(a)).slice(-3).reverse();
+  return{n,c,games,dist,cur,best,seasons,types,chars,slots,strengths,weaknesses,perfect:dist[6]};
+}
+const pct=(c,n)=>n?Math.round(c/n*100)+"%":"–";
+function bar(c,n,w=8){if(!n)return"░".repeat(w);const f=Math.round(c/n*w);return"█".repeat(f)+"░".repeat(w-f)}
+function srow(label,v){return`<div class="srow${v.n?"":" none"}"><span class="sl">${esc(label)}</span><span class="sb" aria-hidden="true">${bar(v.c,v.n)}</span><span class="sp">${v.n?pct(v.c,v.n):"–"}</span><span class="sn">${v.n?v.c+"/"+v.n:""}</span></div>`}
+function tipFor(l){
+  if(/^Season /.test(l))return`Rewatch tip: go back to ${esc(l)}.`;
+  if(l==="Episode Titles")return"Tip: skim the episode list. Titles are a weak spot.";
+  if(l==="Complete the Quote"||l==="Who Said It")return"Tip: rewatch with the dialogue in mind. Quotes are a weak spot.";
+  if(l==="Timeline")return"Tip: brush up on when the big moments happen.";
+  if(l==="Island Trivia")return"Tip: Island details are a weak spot.";
+  return`Tip: rewatch the ${esc(l)} episodes.`;
+}
+function renderStatsPage(){
+  const S=computeStats();
+  const head=session?`OPERATOR ${esc((profile?.username||"").toUpperCase())}`:"OPERATOR FILE";
+  const tiles=[["GAMES",S.games.length],["ANSWERED",S.n],["ACCURACY",pct(S.c,S.n)],["PERFECT 6/6",S.perfect],["STREAK",S.cur],["BEST STREAK",S.best]]
+    .map(([l,v])=>`<div class="tile"><b>${v}</b><span>${l}</span></div>`).join("");
+  let sw;
+  if(S.n<MIN_SAMPLE*3)sw=`<p class="dimln">Not enough data yet. Answer ${MIN_SAMPLE*3-S.n} more question${MIN_SAMPLE*3-S.n===1?"":"s"} to unlock your strengths and weaknesses.</p>`;
+  else sw=`<div class="sw"><div><p class="swh">STRENGTHS</p>${S.strengths.length?S.strengths.map(a=>`<p class="swi good">+ ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join(""):'<p class="swi dimln">None above 60% yet.</p>'}</div>
+      <div><p class="swh">WEAK SPOTS</p>${S.weaknesses.length?S.weaknesses.map(a=>`<p class="swi bad">− ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join(""):'<p class="swi dimln">No weak spots found.</p>'}</div></div>
+      ${S.weaknesses[0]?`<p class="dimln">${tipFor(S.weaknesses[0].label)}</p>`:""}`;
+  const seasonRows=[1,2,3,4,5,6].map(s=>srow("Season "+s,S.seasons.get(s))).join("");
+  const typeRows=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline"].map(t=>srow(t,S.types.get(t))).join("");
+  const ch=Object.entries(S.chars.all()).sort((a,b)=>b[1].n-a[1].n||b[1].c/b[1].n-a[1].c/a[1].n);
+  const chRows=ch.slice(0,10).map(([k,v])=>srow(k,v)).join(""), chMore=ch.slice(10).map(([k,v])=>srow(k,v)).join("");
+  const slotRows=NUMS.map((num,i)=>srow("No. "+String(num).padStart(2,"0"),S.slots.get(i))).join("");
+  const maxD=Math.max(1,...S.dist);
+  const distRows=S.dist.map((v,i)=>`<div class="srow"><span class="sl">${i}/6</span><span class="sb" aria-hidden="true">${"█".repeat(Math.round(v/maxD*8))}${"░".repeat(8-Math.round(v/maxD*8))}</span><span class="sp">${v}</span><span class="sn">${v===1?"game":"games"}</span></div>`).reverse().join("");
+  const last7=[...Array(7)].map((_,i)=>{const d=new Date(today);d.setDate(d.getDate()-6+i);const h=data.history[ymd(d)];
+    return`<div class="day${h?.done?"":" off"}"><b>${h?.done?h.score:"–"}</b><span>${d.toLocaleDateString("en-US",{weekday:"short"}).toUpperCase()}</span></div>`}).join("");
+  const account=session?`<h3>ACCOUNT</h3><p class="dimln">${esc(session.user?.email||"")}</p>
+      <div class="stack"><button class="btn" id="pRename" type="button">&gt; CHANGE USERNAME</button><button class="btn" id="pOut" type="button">&gt; LOG OUT</button></div><p class="msg" id="pMsg" aria-live="polite"></p>`
+    :cloudOn?`<h3>ACCOUNT</h3><p class="dimln">These stats live on this device only. Log in to keep them on every device.</p><div class="stack"><button class="btn" id="pLogin" type="button">&gt; LOG IN</button></div>`:"";
+  return`<h2 id="panelTitle">${head}</h2>
+    <p class="dimln">Knowledge report. Every answer since the reset counts.</p>
+    <div class="tiles">${tiles}</div>
+    <h3>LAST 7 DAYS</h3><div class="week">${last7}</div>
+    <h3>STRENGTHS &amp; WEAK SPOTS</h3>${sw}
+    <h3>KNOWLEDGE BY SEASON</h3><div class="srows">${seasonRows}</div>
+    <h3>KNOWLEDGE BY CHARACTER</h3>${ch.length?`<div class="srows">${chRows}</div>${chMore?`<div class="srows" id="charsMore" hidden>${chMore}</div><button class="btn quiet" id="pShowChars" type="button">[ SHOW ALL ${ch.length} CHARACTERS ]</button>`:""}`:'<p class="dimln">No character questions answered yet.</p>'}
+    <h3>BY QUESTION TYPE</h3><div class="srows">${typeRows}</div>
+    <h3>BY NUMBER</h3><p class="dimln">How you do on each of the day's six slots.</p><div class="srows">${slotRows}</div>
+    <h3>SCORE HISTORY</h3><div class="srows">${distRows}</div>
+    ${account}
+    <button class="btn quiet" id="pClose" type="button">[ CLOSE ]</button>`;
+}
+
 // ---------- Account panel ----------
 let lastFocus=null, pendingEmail="";
 // Google's own sign-in button: the popup names this site, and the login never leaves the page.
@@ -634,10 +764,12 @@ function closePanel(){$("panel").hidden=true;document.body.style.overflow="";las
 function panelMsg(t,err){const m=$("pMsg");if(m){m.textContent=t||"";m.classList.toggle("err",!!err)}}
 function busy(on){$("panelBody").querySelectorAll("button,input").forEach(el=>el.disabled=on)}
 function openPanel(kind){
-  if(!cloudOn)return;
+  if(kind==="account")kind="stats";
+  if(!cloudOn&&kind!=="stats")return;
   if($("panel").hidden)lastFocus=document.activeElement;
   $("panel").hidden=false;document.body.style.overflow="hidden";
   const P=$("panelBody"), prov=CFG.providers||{};
+  P.classList.toggle("wide",kind==="stats");P.scrollTop=0;$("panel").scrollTop=0;
   const redirectTo=location.origin+location.pathname;
   if(kind==="login"){
     P.innerHTML=`<h2 id="panelTitle">IDENTIFY YOURSELF</h2>
@@ -708,24 +840,18 @@ function openPanel(kind){
     $("pBack")&&($("pBack").onclick=()=>openPanel("account"));
     $("pName").focus();
   }
-  else if(kind==="account"){
-    const who=session?.user?.email||"";
-    P.innerHTML=`<h2 id="panelTitle">OPERATOR ${esc((profile?.username||"").toUpperCase())}</h2>
-      <p class="dimln">${esc(who)}</p>
-      <p>Your games and streaks are saved to your account.</p>
-      <div class="stack">
-        <button class="btn" id="pRename" type="button">&gt; CHANGE USERNAME</button>
-        <button class="btn" id="pOut" type="button">&gt; LOG OUT</button>
-      </div>
-      <p class="msg" id="pMsg" aria-live="polite"></p>
-      <button class="btn quiet" id="pClose" type="button">[ CLOSE ]</button>`;
-    $("pRename").onclick=()=>openPanel("username");
-    $("pOut").onclick=async()=>{busy(true);await sb.auth.signOut();closePanel()};
+  else if(kind==="stats"){
+    P.innerHTML=renderStatsPage();
     $("pClose").onclick=closePanel;
-    $("pRename").focus();
+    $("pShowChars")&&($("pShowChars").onclick=()=>{$("charsMore").hidden=false;$("pShowChars").remove()});
+    $("pRename")&&($("pRename").onclick=()=>openPanel("username"));
+    $("pOut")&&($("pOut").onclick=async()=>{busy(true);await sb.auth.signOut();closePanel()});
+    $("pLogin")&&($("pLogin").onclick=()=>openPanel("login"));
+    const h=$("panelTitle");h.tabIndex=-1;h.focus({preventScroll:true});
   }
 }
-$("opBtn").onclick=()=>openPanel(session?"account":"login");
+$("opBtn").onclick=()=>openPanel(session?"stats":"login");
+$("statsBtn").onclick=()=>openPanel("stats");
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("panel").hidden&&(profile||!session))closePanel()});
 
 // ---------- PWA: offline cache and install prompts ----------
