@@ -146,7 +146,9 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .msg{min-height:1.2em;font-size:1.05rem}
 .msg.err{color:var(--bad)}
 .install{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.95rem;color:var(--dim)}
+.gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
+<script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 </head>
@@ -554,6 +556,28 @@ const ready=(async()=>{
 
 // ---------- Account panel ----------
 let lastFocus=null, pendingEmail="";
+// Google's own sign-in button: the popup names this site, and the login never leaves the page.
+// Google gets a hashed nonce; Supabase gets the raw one and checks they match.
+async function sha256hex(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+async function mountGoogleButton(fallback){
+  const box=$("pGoogleBtn");if(!box)return;
+  const t0=Date.now();
+  while(!(window.google&&google.accounts&&google.accounts.id)){if(Date.now()-t0>6000){box.hidden=true;fallback();return}await sleep(100)}
+  if(!$("pGoogleBtn"))return;
+  try{
+    const raw=[...crypto.getRandomValues(new Uint8Array(16))].map(x=>x.toString(16).padStart(2,"0")).join("");
+    const hashed=await sha256hex(raw);
+    google.accounts.id.initialize({client_id:CFG.googleClientId,nonce:hashed,ux_mode:"popup",itp_support:true,
+      callback:async resp=>{
+        busy(true);panelMsg("VERIFYING...");
+        const{error}=await sb.auth.signInWithIdToken({provider:"google",token:resp.credential,nonce:raw});
+        busy(false);
+        if(error){panelMsg(error.message,true);return}
+        panelMsg("ACCESS GRANTED.");setTimeout(()=>{if(!$("panel").hidden&&$("pGoogleBtn"))closePanel()},600)}});
+    box.innerHTML="";
+    google.accounts.id.renderButton(box,{type:"standard",theme:"filled_black",size:"large",text:"continue_with",shape:"rectangular",logo_alignment:"left",width:Math.max(200,Math.min(400,box.clientWidth||300))});
+  }catch(e){box.hidden=true;fallback()}
+}
 function closePanel(){$("panel").hidden=true;document.body.style.overflow="";lastFocus?.focus?.()}
 function panelMsg(t,err){const m=$("pMsg");if(m){m.textContent=t||"";m.classList.toggle("err",!!err)}}
 function busy(on){$("panelBody").querySelectorAll("button,input").forEach(el=>el.disabled=on)}
@@ -567,7 +591,8 @@ function openPanel(kind){
     P.innerHTML=`<h2 id="panelTitle">IDENTIFY YOURSELF</h2>
       <p class="dimln">Log in to keep your streak on every device.</p>
       <div class="stack">
-        ${prov.google!==false?'<button class="btn" id="pGoogle" type="button">&gt; CONTINUE WITH GOOGLE</button>':""}
+        ${prov.google!==false&&CFG.googleClientId?'<div class="gbtn" id="pGoogleBtn" aria-label="Continue with Google"></div>':""}
+        ${prov.google!==false?`<button class="btn" id="pGoogle" type="button" ${CFG.googleClientId?"hidden":""}>&gt; CONTINUE WITH GOOGLE</button>`:""}
         ${prov.apple?'<button class="btn" id="pApple" type="button">&gt; CONTINUE WITH APPLE</button>':""}
       </div>
       ${prov.google!==false||prov.apple?'<p class="or">— OR USE YOUR EMAIL —</p>':""}
@@ -590,7 +615,8 @@ function openPanel(kind){
       if(error){panelMsg(error.message,true);return}
       pendingEmail=email;openPanel("code")};
     $("pClose").onclick=closePanel;
-    ($("pGoogle")||$("pEmail")).focus();
+    ($("pGoogleBtn")?$("pEmail"):($("pGoogle")||$("pEmail"))).focus();
+    if($("pGoogleBtn"))mountGoogleButton(()=>{$("pGoogle")&&($("pGoogle").hidden=false)});
   }
   else if(kind==="code"){
     P.innerHTML=`<h2 id="panelTitle">ENTER THE CODE</h2>
