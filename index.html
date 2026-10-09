@@ -147,6 +147,11 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .msg.err{color:var(--bad)}
 .install{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.95rem;color:var(--dim)}
 .panel .screen.wide{max-width:600px}
+.stickybar{position:sticky;top:calc(-48px - env(safe-area-inset-top,0px));z-index:2;display:flex;align-items:center;gap:12px;
+  background:var(--crt);margin:-22px -20px 0;padding:18px 20px 12px;border-bottom:1px dashed var(--dim);border-radius:12px 12px 0 0;box-shadow:0 -60px 0 var(--crt)}
+.stickybar h2{min-width:0;overflow-wrap:anywhere;font-size:1.6rem;letter-spacing:.06em}
+@media (max-width:440px){.stickybar h2{font-size:1.4rem;letter-spacing:.03em}.backbtn{font-size:1.3rem;padding:4px 10px}}
+.backbtn{flex:none;font-size:1.5rem;line-height:1;border:1px solid var(--phos);padding:6px 12px;min-height:40px}
 .panel h3{font-weight:400;font-size:1.25rem;letter-spacing:.08em;margin:10px 0 0;padding-top:12px;border-top:1px dashed var(--dim)}
 .panel h3::before{content:">: ";color:var(--dim)}
 .opbtns{display:flex;gap:6px;flex-wrap:wrap}
@@ -722,7 +727,7 @@ function renderStatsPage(){
   const account=session?`<h3>ACCOUNT</h3><p class="dimln">${esc(session.user?.email||"")}</p>
       <div class="stack"><button class="btn" id="pRename" type="button">&gt; CHANGE USERNAME</button><button class="btn" id="pOut" type="button">&gt; LOG OUT</button></div><p class="msg" id="pMsg" aria-live="polite"></p>`
     :cloudOn?`<h3>ACCOUNT</h3><p class="dimln">These stats live on this device only. Log in to keep them on every device.</p><div class="stack"><button class="btn" id="pLogin" type="button">&gt; LOG IN</button></div>`:"";
-  return`<h2 id="panelTitle">${head}</h2>
+  return`<div class="stickybar"><button class="linkbtn backbtn" id="pBackTop" type="button" aria-label="Back to the game">[ &lt; ]</button><h2 id="panelTitle">${head}</h2></div>
     <p class="dimln">Knowledge report. Every answer since the reset counts.</p>
     <div class="tiles">${tiles}</div>
     <h3>LAST 7 DAYS</h3><div class="week">${last7}</div>
@@ -843,6 +848,7 @@ function openPanel(kind){
   else if(kind==="stats"){
     P.innerHTML=renderStatsPage();
     $("pClose").onclick=closePanel;
+    $("pBackTop").onclick=closePanel;
     $("pShowChars")&&($("pShowChars").onclick=()=>{$("charsMore").hidden=false;$("pShowChars").remove()});
     $("pRename")&&($("pRename").onclick=()=>openPanel("username"));
     $("pOut")&&($("pOut").onclick=async()=>{busy(true);await sb.auth.signOut();closePanel()});
