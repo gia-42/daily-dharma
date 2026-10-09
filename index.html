@@ -298,6 +298,57 @@ const BANK=[
 [S6,"In the sideways world, what is Sawyer's job?","Police detective","Con man","Car salesman","Bartender"],
 [S6,"What is the name of Jack's son in the sideways world?","David","Aaron","Walt","Charlie"],
 [S6,"Who greets Jack in the church in the finale?","Christian Shephard","Jacob","Desmond Hume","Eloise Hawking"],
+// Complete the quote
+["Complete the Quote","Jack, season 1: “Live together, ___.”","die alone","or not at all","as one","until we're rescued"],
+["Complete the Quote","Desmond: “See you in another ___, brother.”","life","world","time","place"],
+["Complete the Quote","Charlie, at the end of the pilot: “Guys… where ___?”","are we","is Jack","is the plane","did they go"],
+["Complete the Quote","Christian Shephard to Jack in the finale: “Everybody dies sometime, ___.”","kiddo","son","Jack","buddy"],
+["Complete the Quote","Juliet's last words to Sawyer: “It ___.”","worked","ends","hurts","doesn't matter"],
+["Complete the Quote","Ben asks “What about me?” and Jacob answers: “What about ___?”","you","me","the island","your father"],
+["Complete the Quote","The Others insist to Michael: “We're the good ___.”","guys","people","ones","side"],
+["Complete the Quote","Locke, again and again: “We were brought here for a ___.”","reason","test","price","rescue"],
+["Complete the Quote","Jacob: “It only ends once. Anything that happens before that is just ___.”","progress","a test","a dream","the beginning"],
+// Who said it
+["Who Said It","“I've looked into the eye of this island, and what I saw was beautiful.”","John Locke","Jacob","Ben Linus","Mr. Eko"],
+["Who Said It","“Do not mistake coincidence for fate.”","Mr. Eko","John Locke","Richard Alpert","Rose"],
+["Who Said It","“The universe has a way of course correcting.”","Eloise Hawking","Daniel Faraday","Jacob","Charles Widmore"],
+["Who Said It","Who tells Desmond that he needs to find a “constant”?","Daniel Faraday","Eloise Hawking","Penny Widmore","Charlie Pace"],
+["Who Said It","Who calls himself a “man of science” in his clash with Locke, the “man of faith”?","Jack Shephard","Daniel Faraday","Sayid Jarrah","Ben Linus"],
+["Who Said It","Whose go-to word for every situation is “dude”?","Hurley","Charlie","Sawyer","Frank Lapidus"],
+["Who Said It","Whose trademark exclamation is “Son of a…!”?","Sawyer","Jack","Charlie","Miles"],
+["Who Said It","Which group greets each other with “Namaste”?","The Dharma Initiative","The Others","The tail section","Widmore's crew"],
+["Who Said It","What does the voice in the cabin whisper to Locke?","“Help me.”","“Run.”","“Go back.”","“Find me.”"],
+// Episode titles
+["Episode Titles","What is the season 1 finale called?","Exodus","Outlaws","Deus Ex Machina","Homecoming"],
+["Episode Titles","What is the season 2 finale called?","Live Together, Die Alone","Man of Science, Man of Faith","Three Minutes","The Hunting Party"],
+["Episode Titles","What is the season 3 finale called?","Through the Looking Glass","The Man Behind the Curtain","Greatest Hits","Not in Portland"],
+["Episode Titles","What is the season 4 finale called?","There's No Place Like Home","The Constant","Cabin Fever","Meet Kevin Johnson"],
+["Episode Titles","What is the season 5 finale called?","The Incident","Follow the Leader","LaFleur","The Variable"],
+["Episode Titles","What is the series finale called?","The End","The Candidate","What They Died For","Across the Sea"],
+["Episode Titles","In which episode does Desmond's mind jump between 1996 and 2004?","The Constant","The Variable","Flashes Before Your Eyes","Catch-22"],
+["Episode Titles","Which season 1 episode reveals that Locke used a wheelchair?","Walkabout","Deus Ex Machina","White Rabbit","Outlaws"],
+["Episode Titles","Which season 1 episode reveals Hurley won the lottery with the Numbers?","Numbers","Solitary","Homecoming","Hearts and Minds"],
+["Episode Titles","Which episode tells Richard Alpert's backstory?","Ab Aeterno","Dr. Linus","Recon","The Package"],
+["Episode Titles","Which episode shows Jacob and the Man in Black as children?","Across the Sea","The Substitute","Lighthouse","Sundown"],
+["Episode Titles","Which episode follows Locke off the Island using his alias?","The Life and Death of Jeremy Bentham","This Place Is Death","Namaste","Dead Is Dead"],
+["Episode Titles","In which episode is Alex killed by Keamy?","The Shape of Things to Come","Cabin Fever","Eggtown","Ji Yeon"],
+["Episode Titles","In which episode does Hurley get the Dharma van running?","Tricia Tanaka Is Dead","Every Man for Himself","Par Avion","Enter 77"],
+["Episode Titles","Which season 3 episode sends Desmond back to his past life in London?","Flashes Before Your Eyes","The Constant","Catch-22","The Brig"],
+["Episode Titles","What is the season 2 premiere called?","Man of Science, Man of Faith","Adrift","Orientation","What Kate Did"],
+["Episode Titles","What is the first Sawyer-centric episode called?","Confidence Man","Outlaws","The Long Con","Every Man for Himself"],
+// Timeline
+["Timeline","In which season does Boone die?","Season 1","Season 2","Season 3","Season 4"],
+["Timeline","In which season does Shannon die?","Season 2","Season 1","Season 3","Season 4"],
+["Timeline","In which season do Ana Lucia and Libby die?","Season 2","Season 1","Season 3","Season 4"],
+["Timeline","In which season does Desmond first appear?","Season 2","Season 1","Season 3","Season 4"],
+["Timeline","In which season does Charlie die?","Season 3","Season 2","Season 4","Season 5"],
+["Timeline","In which season is Mr. Eko killed by the Monster?","Season 3","Season 2","Season 4","Season 1"],
+["Timeline","In which season does Juliet first appear?","Season 3","Season 2","Season 4","Season 5"],
+["Timeline","In which season's finale is the first flash-forward revealed?","Season 3","Season 2","Season 4","Season 1"],
+["Timeline","In which season does Ben move the Island?","Season 4","Season 3","Season 5","Season 6"],
+["Timeline","In which season is Alex killed?","Season 4","Season 3","Season 5","Season 2"],
+["Timeline","In which season is Daniel Faraday shot by his mother?","Season 5","Season 4","Season 6","Season 3"],
+["Timeline","In which season does Sayid die on the submarine?","Season 6","Season 5","Season 4","Season 3"],
 ];
 
 const NUMS=[4,8,15,16,23,42], PER_DAY=6, EPOCH=new Date(2026,9,9); // day #1
@@ -310,16 +361,17 @@ const parseYmd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,
 const key=ymd(today);
 function questionsFor(n){
   const per=Math.floor(BANK.length/PER_DAY), idx=n-1, round=Math.floor(idx/per), slot=idx%per;
-  const order=shuffle(BANK.map((_,i)=>i),4815+round*162342);
+  const order=shuffle(BANK.map((_,i)=>i),1977+round*42815);
   return order.slice(slot*PER_DAY,slot*PER_DAY+PER_DAY).map((bi,qi)=>{
-    const b=BANK[bi]; const opts=shuffle([b[2],b[3],b[4],b[5]],n*108+qi+23);
+    const b=BANK[bi]; const opts=shuffle([b[2],b[3],b[4],b[5]],n*316+qi+15);
     return{era:b[0],q:b[1],opts,answer:opts.indexOf(b[2])};
   });
 }
 const QS=questionsFor(dayNo);
 
 // ---------- Local store (cache on this device; the cloud copy wins when logged in) ----------
-const LS="dailyDharma";
+const LS="dailyDharma.v2";   // stats reset on Oct 9, 2026: the old store is ignored
+try{localStorage.removeItem("dailyDharma")}catch(e){}
 function load(){try{const d=JSON.parse(localStorage.getItem(LS)||"{}");d.history=d.history||{};return d}catch(e){return{history:{}}}}
 function save(d){try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){}}
 let data=load();
