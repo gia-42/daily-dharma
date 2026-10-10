@@ -1,6 +1,6 @@
 // Daily Dharma service worker: makes the game installable and playable offline.
 // Change VERSION whenever you upload new files so every player gets them.
-const VERSION = "dharma-v8";
+const VERSION = "dharma-v9";
 const SHELL = [
   "./",
   "./index.html",

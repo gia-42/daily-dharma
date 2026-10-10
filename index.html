@@ -207,6 +207,7 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .danger{color:var(--bad);border-color:var(--bad)}
 .danger:hover:not(:disabled),.danger:focus-visible{background:var(--bad);color:var(--crt)}
 @media (max-width:440px){.crow{grid-template-columns:minmax(0,1fr) 4.4em 4.4em;font-size:1.05rem}.frow{font-size:1.1rem}}
+.ln.namaste{margin-top:6px;letter-spacing:.06em}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -235,7 +236,7 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
     </div>
   </section>
  </div>
- <footer>SIX QUESTIONS DAILY, ONE FOR EACH NUMBER. NEW SET AT MIDNIGHT. BETA. UNOFFICIAL FAN QUIZ. <a href="privacy.html" style="color:inherit">PRIVACY</a></footer>
+ <footer>SIX QUESTIONS DAILY, ONE FOR EACH NUMBER. NEW SET AT MIDNIGHT. UNOFFICIAL FAN QUIZ. <a href="privacy.html" style="color:inherit">PRIVACY</a></footer>
  <div class="install" id="installRow" hidden></div>
 </div>
 
@@ -582,9 +583,10 @@ function intro(){
     <p class="ln big" id="l1"></p>
     <p class="ln" id="l2"></p>
     <p class="ln dimln" id="l3"></p>
+    <p class="ln namaste" id="l4"></p>
     <button class="next start" id="startBtn" hidden></button>
   </div>`;
-  const lines={l0:()=>"INITIALIZING STATION TERMINAL...",l1:()=>`ORIENTATION #${dayNo}`,l2:()=>longDate,l3:()=>introStatus().status};
+  const lines={l0:()=>"INITIALIZING STATION TERMINAL...",l1:()=>`ORIENTATION #${dayNo}`,l2:()=>longDate,l3:()=>introStatus().status,l4:()=>state.done?"NAMASTE. SEE YOU TOMORROW.":"NAMASTE AND GOOD LUCK."};
   const BLOCKS=20, barText=k=>`[${"█".repeat(k)}${"░".repeat(BLOCKS-k)}] ${String(Math.round(k/BLOCKS*100)).padStart(3," ")}%`;
   const timers=[];
   const wait=ms=>new Promise(r=>timers.push(setTimeout(r,ms)));
@@ -602,7 +604,8 @@ function intro(){
     await wait(250);if(introSkipped)return;
     await type("l1",55);if(introSkipped)return;await wait(200);
     await type("l2",28);if(introSkipped)return;await wait(200);
-    await type("l3",22);if(introSkipped)return;await wait(300);
+    await type("l3",22);if(introSkipped)return;await wait(350);
+    await type("l4",40);if(introSkipped)return;await wait(300);
     if(!introSkipped)done();
   })();
 }
@@ -619,7 +622,7 @@ function refresh(){
   state=data.history[key]||{picks:[],done:false,score:0};
   QS=questionsFromIds(state.qids,dayNo)||questionsFor(dayNo);
   stats();
-  if(view==="intro"){if(introSkipped&&$("l3")){const s=introStatus();$("l3").textContent=s.status;$("startBtn").textContent=s.label}return}
+  if(view==="intro"){if(introSkipped&&$("l3")){const s=introStatus();$("l3").textContent=s.status;$("l4").textContent=state.done?"NAMASTE. SEE YOU TOMORROW.":"NAMASTE AND GOOD LUCK.";$("startBtn").textContent=s.label}return}
   pips();
   if(state.done)showResults();
   else if(state.picks.length>=PER_DAY)finish();
