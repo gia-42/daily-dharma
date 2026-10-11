@@ -235,7 +235,7 @@ footer a{flex:none}
 .panel .stickybar{top:-22px}
 /* ---------- Picture zoom ---------- */
 button.pic{display:block;width:100%;padding:0;font:inherit;cursor:zoom-in}
-#stage .pic{width:auto;max-width:100%;height:clamp(120px,29vh,300px);margin:0 auto}
+#stage .qb .pic{max-width:100%}
 button.pic:focus-visible{outline:2px solid var(--phos);outline-offset:2px}
 .pic .tag.zr{left:auto;right:6px}
 .zoom{position:fixed;inset:0;z-index:20;background:rgba(3,4,3,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:env(safe-area-inset-top,0px) 10px env(safe-area-inset-bottom,0px);cursor:zoom-out}
@@ -251,31 +251,50 @@ header .meta{grid-column:1;grid-row:2;text-align:left;font-size:.95rem;white-spa
 .sndbtn{grid-column:2;grid-row:2;font-size:.95rem;white-space:nowrap;padding:0 2px}
 .sndbtn.off{color:var(--dim)}
 @media (max-width:420px){header h1{letter-spacing:.08em}}
-/* ---------- Question screen ---------- */
-.qcard{gap:clamp(8px,1.4vh,14px)}
-.qcard .q{min-height:2.4em}
-.qcard .opts{gap:4px;display:flex;flex-direction:column;justify-content:space-between;flex:1 1 auto;max-height:22em}
-.opt{border:1px solid transparent!important;width:100%;padding:5px 8px}
+/* ---------- Question log ---------- */
+.term{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px}
+.log{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;display:flex;flex-direction:column;padding-right:4px}
+.qb{flex:none;display:flex;flex-direction:column;gap:7px}
+.qb+.qb{margin-top:1.7em}
+.qb .era{font-size:.875rem}
+.era{flex-wrap:nowrap;white-space:nowrap}
+.era span:first-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.era span:last-child{flex:none}
+.qb .q{font-size:1.15rem;line-height:1.22;min-height:0}
+.qb .q .gh{visibility:hidden}
+.qb .q .tx.cur::after{content:"█";display:inline-block;width:0;overflow:visible;animation:blink 1s steps(1) infinite}
+.qb .opts{display:flex;flex-direction:column;gap:2px}
+.qb .opt{font-size:1.1rem;line-height:1.2;padding:3px 8px}
+.qb.done .opt.dim{opacity:.35}
+.opt{border:1px solid transparent!important;width:100%}
 .opt .ot{min-width:0}
+.opt.pend{visibility:hidden}
 .opt.sel{border-color:var(--phos)!important;background:rgba(168,197,156,.12)}
 .opt.sel .k{color:var(--phos)}
-.opt.checking{animation:verify .18s steps(1) infinite}
-@keyframes verify{50%{background:var(--phos);color:var(--crt);text-shadow:none}}
+.opt.blink{background:var(--phos)!important;color:var(--crt);text-shadow:none}
+.opt.blink .k{color:var(--crt)!important}
 .opt.right::after,.opt.wrong::after{content:none!important}
 .opt:disabled{cursor:default}
-.qfoot{margin-top:auto;flex:none;display:flex;flex-direction:column;align-items:stretch;gap:6px;padding-top:4px}
-.status{margin:0;font-size:1rem;line-height:1.2;color:var(--dim);letter-spacing:.06em;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rx{margin:0;font-size:.875rem;color:var(--dim);letter-spacing:.06em;white-space:pre}
+.rx::before{content:">: "}
+.qb .pic{width:min(100%,calc(26vh*16/9));height:auto;margin:0}
+.pic canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;filter:grayscale(1) sepia(.85) hue-rotate(52deg) saturate(1.45) brightness(.92) contrast(1.15)}
+.pic.loading{cursor:progress}
+.pic.loading img{visibility:hidden}
+.pic.loading .tag.zr{display:none}
+.qfoot{flex:none;display:flex;align-items:center;gap:10px;border-top:1px dashed var(--dim);padding-top:8px}
+.status{flex:1 1 auto;margin:0;font-size:.95rem;line-height:1.2;color:var(--dim);letter-spacing:.06em;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .status.good{color:var(--phos)}
 .status.bad{color:var(--bad)}
 .status.busy::after{content:"";animation:dots 1s steps(4) infinite}
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
-.qfoot .next{align-self:flex-end;flex:none;min-width:9.5em;text-align:center;white-space:nowrap}
-.qcard .era{flex-wrap:nowrap;white-space:nowrap}
-.qcard .era span:first-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
-.qcard .era span:last-child{flex:none}
+.qfoot .next{flex:none;width:7.6em;font-size:1.1rem;line-height:1.2;text-align:center;white-space:nowrap;padding:5px 0;margin:0;align-self:center}
 .next:disabled{opacity:.35;cursor:default}
 .next.go{background:var(--phos);color:var(--crt);text-shadow:none}
-.measure{position:absolute;left:-9999px;top:0;overflow:hidden;visibility:hidden;display:flex;flex-direction:column}
+@media (min-width:600px){.qb .q{font-size:1.25rem}.qb .opt{font-size:1.15rem}.qb .era,.rx{font-size:.95rem}}
+.sndico{display:block;height:.95em;width:auto}
+.sndbtn{padding:2px 4px;line-height:1}
+@media (max-width:380px){.progress{flex-wrap:nowrap;font-size:1rem;gap:2px}}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 
 @media (hover:hover){.linkbtn:hover{background:var(--phos);color:var(--crt);text-shadow:none;outline:0}.btn:hover:not(:disabled){background:var(--phos);color:var(--crt);text-shadow:none;outline:0}.fbtn:hover{background:var(--phos);color:var(--crt);text-shadow:none;outline:0}.fbtn:hover .dimtxt{color:var(--crt)}.danger:hover:not(:disabled){background:var(--bad);color:var(--crt)}}
@@ -289,7 +308,7 @@ header .meta{grid-column:1;grid-row:2;text-align:left;font-size:.95rem;white-spa
  <div class="screen">
   <header>
     <h1><svg class="dlogo" viewBox="0 0 25 25" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 0h11v1h-11zM6 1h13v1h-13zM5 2h2v1h-2zM18 2h2v1h-2zM4 3h2v1h-2zM9 3h7v1h-7zM19 3h2v1h-2zM3 4h2v1h-2zM6 4h1v1h-1zM18 4h1v1h-1zM20 4h2v1h-2zM2 5h2v1h-2zM5 5h1v1h-1zM7 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h2v1h-2zM1 6h2v1h-2zM4 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h2v1h-2zM0 7h2v1h-2zM5 7h1v1h-1zM7 7h1v1h-1zM10 7h5v1h-5zM17 7h1v1h-1zM19 7h1v1h-1zM23 7h2v1h-2zM0 8h2v1h-2zM6 8h1v1h-1zM18 8h1v1h-1zM23 8h2v1h-2zM0 9h2v1h-2zM3 9h1v1h-1zM11 9h3v1h-3zM21 9h1v1h-1zM23 9h2v1h-2zM0 10h2v1h-2zM3 10h1v1h-1zM5 10h1v1h-1zM7 10h1v1h-1zM10 10h5v1h-5zM17 10h1v1h-1zM19 10h1v1h-1zM21 10h1v1h-1zM23 10h2v1h-2zM0 11h2v1h-2zM3 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h7v1h-7zM17 11h1v1h-1zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h2v1h-2zM0 12h2v1h-2zM3 12h1v1h-1zM9 12h7v1h-7zM19 12h1v1h-1zM23 12h2v1h-2zM0 13h2v1h-2zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h7v1h-7zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM0 14h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h1v1h-1zM10 14h5v1h-5zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h2v1h-2zM0 15h2v1h-2zM3 15h1v1h-1zM11 15h3v1h-3zM21 15h1v1h-1zM23 15h2v1h-2zM0 16h2v1h-2zM6 16h1v1h-1zM18 16h1v1h-1zM23 16h2v1h-2zM0 17h2v1h-2zM5 17h1v1h-1zM7 17h1v1h-1zM10 17h5v1h-5zM17 17h1v1h-1zM19 17h1v1h-1zM23 17h2v1h-2zM1 18h2v1h-2zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM22 18h2v1h-2zM2 19h2v1h-2zM5 19h1v1h-1zM7 19h1v1h-1zM10 19h5v1h-5zM17 19h1v1h-1zM19 19h1v1h-1zM21 19h2v1h-2zM3 20h2v1h-2zM6 20h1v1h-1zM18 20h1v1h-1zM20 20h2v1h-2zM4 21h2v1h-2zM9 21h3v1h-3zM13 21h3v1h-3zM19 21h2v1h-2zM5 22h2v1h-2zM18 22h2v1h-2zM6 23h13v1h-13zM7 24h11v1h-11z"/></svg><span>DAILY DHARMA</span></h1>
-    <button class="linkbtn sndbtn" id="sndBtn" type="button" aria-pressed="true" aria-label="Sound">[SND ON]</button>
+    <button class="linkbtn sndbtn" id="sndBtn" type="button" aria-pressed="true" aria-label="Sound on"></button>
     <div class="meta">ORIENTATION <b id="dayno">#1</b> · <span id="datestr"></span></div>
   </header>
   <div class="opbar" id="opbar" hidden>
@@ -791,7 +810,7 @@ function makeQ(bi,n,qi){const b=BANK[bi],opts=shuffle([b[2],b[3],b[4],b[5]],n*10
 // Each day: five questions ramping from easy to hard (2 easy, very easy first; 2 medium; 1 hard),
 // then a picture question to close on No. 42. Pools rotate separately: easy ~75 days, medium ~53, hard ~62.
 // Each pool rotates through its own shuffled order, so no question repeats until its pool has been used up.
-const SEED=6015;
+const SEED=6175;
 const TIERS=[{levels:[1,2],per:2,salt:11},{levels:[3],per:2,salt:23},{levels:[4,5],per:1,salt:42},{levels:[6],per:1,salt:108}];
 const POOLS=TIERS.map(t=>BANK.map((_,i)=>i).filter(i=>t.levels.includes(META[i].level)));
 function takeFrom(pool,per,n,salt){
@@ -841,63 +860,122 @@ function persist(){
 // ---------- Game screens ----------
 let view="intro";
 function pips(){$("progress").innerHTML=QS.map((q,i)=>{const p=state.picks[i];let c=p===undefined?(i===state.picks.length&&!state.done?"now":""):(p===q.answer?"good":"bad");return`<span class="pip ${c}">[${String(NUMS[i]).padStart(2,"0")}]</span>`}).join("")}
-let typeTimer=null;
-function typeOut(el,text){clearTimeout(typeTimer);if(reduceMotion){el.textContent=text;return}
-  let n=0;el.classList.add("cur");(function step(){el.textContent=text.slice(0,++n);if(n%3===0)SFX.key();if(n<text.length)typeTimer=setTimeout(step,16);else el.classList.remove("cur")})()}
+const pad2=n=>String(n).padStart(2,"0");
 
-// Question screen. Tap an answer to select it, EXECUTE to confirm, then a short verification
-// reveals the result in place (nothing on screen moves) and the button becomes CONTINUE.
-function qCardHTML(q,i){
-  return`<div class="card qcard">
-    <div class="era"><span>${q.era}</span><span>No. ${NUMS[i]} · ${i+1} of ${PER_DAY}</span></div>
-    ${q.img?`<button class="pic" id="picBtn" type="button" aria-label="Enlarge the frame"><img src="${esc(q.img)}" alt="A frame from a LOST episode" decoding="async"><span class="tag"><b>●</b> FEED ${String(NUMS[i]).padStart(2,"0")}</span><span class="tag zr">[ + ]</span></button>`:""}
-    <p class="q" id="qtext">${esc(q.q)}</p>
-    <div class="opts" role="radiogroup" aria-label="Answers">${q.opts.map((o,j)=>`<button class="opt" id="opt${j}" data-j="${j}" type="button" role="radio" aria-checked="false"><span class="k">[${"ABCD"[j]}]</span><span class="ot">${esc(o)}</span></button>`).join("")}</div>
-    <div class="qfoot"><p class="status" id="qstatus" aria-live="polite">SELECT AN ANSWER</p><button class="next" id="nextBtn" type="button" disabled>[ EXECUTE ]</button></div>
-  </div>`;
-}
-function revealMarks(q,pick){
-  stage.querySelectorAll(".opt").forEach((b,j)=>{
-    b.disabled=true;b.classList.remove("sel","checking");
-    b.classList.add(j===q.answer?"right":j===pick?"wrong":"dim");
-    if(j===q.answer)b.querySelector(".k").textContent="[✓]";else if(j===pick)b.querySelector(".k").textContent="[✕]";
+// Question log: the day's questions are typed one under another on a single terminal screen.
+// Only the log scrolls; the status line and the button under it never move or change size.
+function termHTML(){return`<div class="term" id="term">
+    <div class="log" id="log"></div>
+    <div class="qfoot"><p class="status" id="qstatus" aria-live="polite"></p><button class="next" id="nextBtn" type="button" disabled>[ EXECUTE ]</button></div>
+  </div>`}
+function blockHTML(q,i,live){
+  const id=s=>live?` id="${s}"`:"";
+  return`<section class="qb${live?" live":" done"}" data-i="${i}" aria-label="Question ${i+1} of ${PER_DAY}">
+    <div class="era"><span>${esc(q.era)}</span><span>No. ${NUMS[i]} · ${i+1}/${PER_DAY}</span></div>
+    ${q.img?`<p class="rx">${live?"RECEIVING TRANSMISSION":"TRANSMISSION RECEIVED"}</p>
+    <button class="pic${live?" loading":""}" type="button"${id("picBtn")} aria-label="Enlarge the frame" data-src="${esc(q.img)}"><img src="${esc(q.img)}" alt="A frame from a LOST episode"><span class="tag"><b>●</b> FEED ${pad2(NUMS[i])}</span><span class="tag zr">[ + ]</span></button>`:""}
+    <p class="q"><span class="tx">${live?"":esc(q.q)}</span><span class="gh">${live?esc(q.q):""}</span></p>
+    <div class="opts" role="radiogroup" aria-label="Answers">${q.opts.map((o,j)=>`<button class="opt${live?" pend":""}"${id("opt"+j)} data-j="${j}" type="button" role="radio" aria-checked="false"${live?" disabled":""}><span class="k">[${"ABCD"[j]}]</span><span class="ot">${esc(o)}</span></button>`).join("")}</div>
+  </section>`}
+function markBlock(b,q,pick){
+  b.querySelectorAll(".opt").forEach((o,j)=>{
+    o.disabled=true;o.classList.remove("sel","blink","pend");o.removeAttribute("id");
+    o.classList.add(j===q.answer?"right":j===pick?"wrong":"dim");
+    o.setAttribute("aria-checked",j===pick);
+    if(j===q.answer)o.querySelector(".k").textContent="[✓]";else if(j===pick)o.querySelector(".k").textContent="[✕]";
   });
-  const ok=pick===q.answer,st=$("qstatus");
-  st.textContent=ok?"ACCEPTED":"REJECTED";st.className="status "+(ok?"good":"bad");
 }
-let qLock=false,curQi=0;
-function showQuestion(i,revealed){
-  view="question";qLock=false;curQi=i;
-  const q=QS[i],pick=state.picks[i];let sel=null;
-  stage.innerHTML=qCardHTML(q,i);
-  layoutQuestion(q);
-  const next=$("nextBtn"),st=$("qstatus"),last=i===PER_DAY-1;
-  const toContinue=()=>{next.disabled=false;next.textContent=last?"[ VIEW RESULTS ]":"[ CONTINUE ]";next.classList.add("go");next.dataset.mode="continue";next.focus({preventScroll:true});if(!$("stage").classList.contains("scroll"))$("stage").scrollTop=0};
-  if($("picBtn")){$("picBtn").onclick=()=>{SFX.click();openZoom(q.img)};const im=$("picBtn").querySelector("img");if(!im.complete)im.onload=()=>layoutQuestion(q)}
-  if(revealed){clearTimeout(typeTimer);revealMarks(q,pick);toContinue()}
-  else typeOut($("qtext"),q.q);
-  const choose=j=>{
-    if(qLock||next.dataset.mode==="continue")return;
-    sel=j;SFX.select();
-    stage.querySelectorAll(".opt").forEach((b,k)=>{b.classList.toggle("sel",k===j);b.setAttribute("aria-checked",k===j)});
-    st.textContent="PRESS EXECUTE";st.className="status";next.disabled=false;
-  };
-  stage.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(+b.dataset.j));
-  stage.onkeydown=e=>{const k="1234abcd".indexOf(e.key.toLowerCase());if(k>=0&&!e.metaKey&&!e.ctrlKey){choose(k%4);e.preventDefault()}};
-  next.onclick=()=>{
-    if(next.dataset.mode==="continue"){SFX.click();if(last)finish();else{pips();showQuestion(i+1,false)}return}
-    if(sel===null||qLock)return;
-    qLock=true;next.disabled=true;SFX.execute();
-    stage.querySelectorAll(".opt").forEach(b=>b.disabled=true);
-    $("opt"+sel).classList.add("checking");st.textContent="VERIFYING";st.className="status busy";
-    const wait=reduceMotion?150:900;SFX.process(wait/1000);
-    setTimeout(()=>{
-      if(view!=="question")return;
-      state.picks[i]=sel;persist();pips();
-      revealMarks(q,sel);sel===q.answer?SFX.correct():SFX.wrong();
-      qLock=false;toContinue();
-    },wait);
-  };
+function setStatus(t,cls=""){const s=$("qstatus");s.textContent=t;s.className="status "+cls}
+function setBtn(label,{on=false,go=false,mode="execute"}={}){const n=$("nextBtn");n.textContent=label;n.disabled=!on;n.classList.toggle("go",go);n.dataset.mode=mode}
+function logBottom(smooth){const l=$("log");if(!l)return;l.scrollTo({top:l.scrollHeight,behavior:smooth&&!reduceMotion?"smooth":"auto"})}
+
+let run=0,curQi=0,qLock=false,sel=null;
+const later=(ms,r)=>new Promise(res=>setTimeout(()=>res(r===run),ms));   // resolves false if the screen was redrawn meanwhile
+
+// Draw the log from scratch: answered questions instantly, then the current one typed in.
+function renderLog(i){
+  view="question";run++;
+  stage.innerHTML=termHTML();
+  const log=$("log");
+  for(let k=0;k<i;k++){log.insertAdjacentHTML("beforeend",blockHTML(QS[k],k,false));markBlock(log.lastElementChild,QS[k],state.picks[k])}
+  $("nextBtn").onclick=onNext;
+  log.onclick=e=>{const p=e.target.closest(".pic");if(p&&!p.classList.contains("loading")){SFX.click();openZoom(p.dataset.src)}};
+  stage.onkeydown=e=>{if(view!=="question")return;const k="1234abcd".indexOf(e.key.toLowerCase());if(k>=0&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&e.target.tagName!=="INPUT"){choose(k%4);e.preventDefault()}};
+  logBottom(false);
+  showQuestion(i);
+}
+
+async function showQuestion(i){
+  const r=run,q=QS[i],log=$("log");curQi=i;qLock=true;sel=null;
+  log.querySelectorAll(".qb.live").forEach(b=>{b.classList.remove("live");b.classList.add("done")});
+  log.insertAdjacentHTML("beforeend",blockHTML(q,i,true));
+  const b=log.lastElementChild;
+  setStatus(q.img?"INCOMING FEED":"STAND BY","busy");setBtn("[ EXECUTE ]");
+  logBottom(i>0);
+  if(q.img&&!(await transmission(b,q,r)))return;
+  if(!(await typeQuestion(b.querySelector(".q"),q.q,r)))return;
+  const opts=[...b.querySelectorAll(".opt")];
+  for(const o of opts){o.classList.remove("pend");o.disabled=false;if(!reduceMotion&&!(await later(55,r)))return}
+  qLock=false;setStatus("SELECT ANSWER");
+}
+
+async function typeQuestion(p,text,r){
+  const tx=p.querySelector(".tx"),gh=p.querySelector(".gh");
+  if(reduceMotion){tx.textContent=text;gh.textContent="";return true}
+  tx.classList.add("cur");
+  for(let n=1;n<=text.length;n++){tx.textContent=text.slice(0,n);gh.textContent=text.slice(n);if(!(await later(14,r)))return false}
+  tx.classList.remove("cur");return true;
+}
+
+// Picture questions arrive as a transmission: the frame resolves from big blocks to full detail.
+async function transmission(b,q,r){
+  const pic=b.querySelector(".pic"),img=pic.querySelector("img"),rx=b.querySelector(".rx");
+  const loaded=()=>img.complete&&img.naturalWidth>0;
+  if(!loaded())await Promise.race([new Promise(res=>{img.onload=img.onerror=res}),later(6000,r)]);
+  if(r!==run)return false;
+  if(reduceMotion||!loaded()){pic.classList.remove("loading");rx.textContent="TRANSMISSION RECEIVED";return true}
+  const cv=document.createElement("canvas");cv.width=480;cv.height=270;pic.insertBefore(cv,img.nextSibling);
+  const g=cv.getContext("2d"),tmp=document.createElement("canvas"),t=tmp.getContext("2d");
+  g.imageSmoothingEnabled=false;
+  SFX.rx();
+  const STEPS=[3,5,8,12,18,28,44,70,110,180,480];
+  for(let k=0;k<STEPS.length;k++){
+    const w=STEPS[k],h=Math.max(2,Math.round(w*9/16));
+    tmp.width=w;tmp.height=h;t.drawImage(img,0,0,w,h);
+    g.clearRect(0,0,480,270);g.drawImage(tmp,0,0,w,h,0,0,480,270);
+    rx.textContent="RECEIVING TRANSMISSION "+String(Math.round((k+1)/STEPS.length*100)).padStart(3," ")+"%";
+    if(!(await later(k<2?120:75,r)))return false;
+  }
+  cv.remove();pic.classList.remove("loading");rx.textContent="TRANSMISSION RECEIVED";SFX.rxDone();
+  return later(150,r);
+}
+
+function choose(j){
+  if(qLock||$("nextBtn").dataset.mode!=="execute")return;
+  const b=$("log").querySelector(".qb.live");if(!b)return;
+  sel=j;SFX.select();
+  b.querySelectorAll(".opt").forEach((o,k)=>{o.classList.toggle("sel",k===j);o.setAttribute("aria-checked",k===j)});
+  setStatus("PRESS EXECUTE");setBtn("[ EXECUTE ]",{on:true});
+}
+document.addEventListener("click",e=>{const o=e.target.closest(".qb.live .opt");if(o)choose(+o.dataset.j)});
+
+async function onNext(){
+  const n=$("nextBtn"),i=curQi,q=QS[i],last=i===PER_DAY-1;
+  if(n.dataset.mode==="continue"){SFX.click();if(last)finish();else{pips();showQuestion(i+1)}return}
+  if(sel===null||qLock)return;
+  const r=run,b=$("log").querySelector(".qb.live"),o=b.querySelectorAll(".opt")[sel];
+  qLock=true;setBtn("[ EXECUTE ]");
+  b.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+  setStatus("VERIFYING","busy");
+  // the computer thinks: evenly spaced beeps, the chosen answer flashing on each one
+  const BEEPS=reduceMotion?1:4,GAP=260;
+  for(let k=0;k<BEEPS;k++){o.classList.add("blink");SFX.think();if(!(await later(GAP/2,r)))return;o.classList.remove("blink");if(!(await later(GAP/2,r)))return}
+  const pick=sel;state.picks[i]=pick;persist();pips();
+  markBlock(b,q,pick);
+  const ok=pick===q.answer;ok?SFX.correct():SFX.wrong();
+  setStatus(ok?"ACCEPTED":"REJECTED",ok?"good":"bad");
+  setBtn(last?"[ RESULTS ]":"[ CONTINUE ]",{on:true,go:true,mode:"continue"});
+  qLock=false;n.focus({preventScroll:true});
 }
 
 function finish(){
@@ -1003,14 +1081,14 @@ function intro(){
   const done=()=>{introSkipped=true;timers.forEach(clearTimeout);setTimeout(fitStage,0);
     for(const id in lines){$(id).textContent=lines[id]();$(id).classList.remove("cur")}
     $("bar").textContent=barText(BLOCKS);const b=$("startBtn");b.textContent=introStatus().label;b.hidden=false;b.focus();};
-  $("startBtn").onclick=e=>{e.stopPropagation();SFX.boot();start()};
+  $("startBtn").onclick=e=>{e.stopPropagation();start()};
   $("intro").onclick=()=>{if(!introSkipped)done()};
   if(reduceMotion){done();return}
   async function type(id,speed){const el=$(id),t=lines[id]();el.classList.add("cur");
     for(let i=1;i<=t.length;i++){if(introSkipped)return;el.textContent=t.slice(0,i);await wait(speed)}el.classList.remove("cur")}
   (async()=>{
     await wait(300);await type("l0",22);if(introSkipped)return;
-    for(let k=0;k<=BLOCKS;k++){if(introSkipped)return;$("bar").textContent=barText(k);SFX.tick();await wait(k<14?45:90)}
+    for(let k=0;k<=BLOCKS;k++){if(introSkipped)return;$("bar").textContent=barText(k);await wait(k<14?45:90)}
     await wait(250);if(introSkipped)return;
     await type("l1",55);if(introSkipped)return;await wait(200);
     await type("l2",28);if(introSkipped)return;await wait(200);
@@ -1025,7 +1103,7 @@ async function start(){
   $("progress").hidden=false;pips();
   if(state.done)showResults();
   else if(state.picks.length>=PER_DAY)finish();
-  else showQuestion(state.picks.length,false);
+  else renderLog(state.picks.length);
 }
 // Redraw whatever is on screen after the history changes (login, sync, logout).
 function refresh(){
@@ -1036,7 +1114,7 @@ function refresh(){
   pips();
   if(state.done)showResults();
   else if(state.picks.length>=PER_DAY)finish();
-  else if(view!=="question"||state.picks.length)showQuestion(state.picks.length,false);
+  else if(view!=="question"||state.picks.length)renderLog(state.picks.length);
 }
 
 // ---------- Accounts and cloud sync (Supabase) ----------
@@ -1495,35 +1573,31 @@ if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWor
 const SFX=(()=>{
   let ctx=null,on=true;try{on=localStorage.getItem("dharma.sound")!=="off"}catch(e){}
   const ac=()=>{if(!on)return null;if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ctx=new C()}if(ctx.state==="suspended")ctx.resume();return ctx};
-  function tone(f,dur,{type="square",vol=.03,at=0,to=null}={}){
+  // one short, quiet square-wave beep
+  function beep(f,dur=.03,{vol=.012,at=0}={}){
     const a=ac();if(!a)return;const t0=a.currentTime+at,o=a.createOscillator(),g=a.createGain();
-    o.type=type;o.frequency.setValueAtTime(f,t0);if(to)o.frequency.exponentialRampToValueAtTime(to,t0+dur);
-    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+.004);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
-    o.connect(g).connect(a.destination);o.start(t0);o.stop(t0+dur+.02);
-  }
-  function chatter(dur){ // relay / dot-matrix ticking while the answer is checked
-    const a=ac();if(!a)return;const n=Math.max(4,Math.round(dur*22));
-    for(let k=0;k<n;k++)tone(1400+Math.random()*900,.012,{vol:.012,at:k*(dur/n)});
+    o.type="square";o.frequency.setValueAtTime(f,t0);
+    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+.003);g.gain.setValueAtTime(vol,t0+dur-.006);g.gain.linearRampToValueAtTime(0,t0+dur);
+    o.connect(g).connect(a.destination);o.start(t0);o.stop(t0+dur+.01);
   }
   return{
     get on(){return on},
     set on(v){on=v;try{localStorage.setItem("dharma.sound",v?"on":"off")}catch(e){}},
-    click:()=>tone(1900,.022,{vol:.018}),
-    key:()=>tone(2600+Math.random()*500,.008,{vol:.005}),
-    select:()=>tone(1000,.035,{vol:.03}),
-    execute:()=>{tone(620,.05,{vol:.03});tone(930,.06,{vol:.03,at:.06})},
-    process:d=>chatter(d),
-    correct:()=>{tone(880,.08,{vol:.04});tone(1320,.16,{vol:.04,at:.09})},
-    wrong:()=>{tone(150,.32,{type:"sawtooth",vol:.035,to:110});tone(155,.32,{type:"square",vol:.015,to:112})},
-    boot:()=>tone(60,.5,{type:"sine",vol:.03,to:58}),
-    tick:()=>tone(1300,.01,{vol:.006})
+    click:()=>beep(1760,.018,{vol:.007}),                               // 1 beep
+    select:()=>beep(1320,.024,{vol:.009}),                              // 1 beep
+    think:()=>beep(990,.04,{vol:.009}),                                 // 1 beep per verify step
+    correct:()=>{beep(1320,.045,{vol:.011});beep(1760,.06,{vol:.011,at:.075})},  // 2 rising beeps
+    wrong:()=>beep(196,.11,{vol:.016}),                                 // 1 low beep
+    rx:()=>{beep(1480,.025,{vol:.008});beep(1480,.025,{vol:.008,at:.07})},       // 2 beeps
+    rxDone:()=>beep(1975,.03,{vol:.008})                                // 1 beep
   };
 })();
-function renderSnd(){const b=$("sndBtn");b.textContent=SFX.on?"[SND ON]":"[SND OFF]";b.setAttribute("aria-pressed",SFX.on);b.classList.toggle("off",!SFX.on)}
+const SND_ICON=on=>`<svg class="sndico" viewBox="0 0 10 9" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M0 3h2v3h-2zM2 2h1v5h-1zM3 1h1v7h-1zM4 0h1v9h-1z${on?"M6 3h1v3h-1zM7 1h1v1h-1zM8 2h1v5h-1zM7 7h1v1h-1z":"M6 2h1v1h-1zM8 2h1v1h-1zM7 3h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1z"}"/></svg>`;
+function renderSnd(){const b=$("sndBtn");b.innerHTML=SND_ICON(SFX.on);b.setAttribute("aria-pressed",SFX.on);b.setAttribute("aria-label",SFX.on?"Sound on":"Sound off");b.title=SFX.on?"Sound on":"Sound off";b.classList.toggle("off",!SFX.on)}
 $("sndBtn").onclick=()=>{SFX.on=!SFX.on;renderSnd();SFX.click()};
 renderSnd();
-// Quiet ticks for every other button press in the game and the panels
-document.addEventListener("click",e=>{const b=e.target.closest("button,a");if(!b||b.id==="sndBtn"||b.closest(".opts")||b.id==="nextBtn"||b.id==="picBtn")return;SFX.click()},true);
+// One quiet tick for every other button press in the game and the panels
+document.addEventListener("click",e=>{const b=e.target.closest("button,a");if(!b||b.id==="sndBtn"||b.closest(".opts")||b.id==="nextBtn"||b.closest(".pic"))return;SFX.click()},true);
 
 // ---------- Keep each game screen inside the frame ----------
 // The stage never scrolls: if a screen is taller than the space (small phone, long question),
@@ -1537,40 +1611,12 @@ function zoomToFit(st,c,min,max){
 }
 function fitStage(){
   const st=$("stage"),c=st.firstElementChild;if(!c)return;
-  if(c.classList.contains("qcard"))return layoutQuestion(QS[curQi]);
+  if(c.classList.contains("term"))return;   // the question log scrolls on its own
   st.classList.remove("scroll");c.style.zoom="";
   zoomToFit(st,c,.6,1.15);
   if(st.scrollHeight>st.clientHeight+1)st.classList.add("scroll");
 }
-// Text questions share one size per day: measured once against the longest question and longest
-// answers of the day, so the layout stays put from question to question and fills the frame.
-let dayLayout=null;
-function measureDay(){
-  const st=$("stage"),box=document.createElement("div");
-  box.className="measure";box.style.width=st.clientWidth+"px";box.style.height=st.clientHeight+"px";
-  st.parentNode.appendChild(box);
-  let K=1.5,lines=1;
-  QS.forEach((q,i)=>{if(q.img)return;box.innerHTML=qCardHTML(q,i);const c=box.firstElementChild;
-    K=Math.min(K,zoomToFit(box,c,.6,1.5))});
-  QS.forEach((q,i)=>{if(q.img)return;box.innerHTML=qCardHTML(q,i);const c=box.firstElementChild;c.style.zoom=K;
-    const p=c.querySelector(".q"),lh=parseFloat(getComputedStyle(p).lineHeight)||1;lines=Math.max(lines,Math.round(p.scrollHeight/lh))});
-  box.remove();
-  dayLayout={w:st.clientWidth,h:st.clientHeight,K,lines};
-}
-function layoutQuestion(q){
-  const st=$("stage"),c=st.firstElementChild;if(!c||!q)return;
-  st.classList.remove("scroll");c.style.minHeight="";
-  let k;
-  if(q.img){c.style.zoom="";k=zoomToFit(st,c,.7,1.15)}
-  else{
-    if(!dayLayout||dayLayout.w!==st.clientWidth||dayLayout.h!==st.clientHeight)measureDay();
-    c.querySelector(".q").style.minHeight=(dayLayout.lines*1.2)+"em";c.style.zoom=k=dayLayout.K;
-    if(st.scrollHeight>st.clientHeight+1)k=zoomToFit(st,c,.55,dayLayout.K);
-  }
-  if(st.scrollHeight>st.clientHeight+1)st.classList.add("scroll");
-  else c.style.minHeight=Math.floor(st.clientHeight/k)+"px";   // fill the frame: the answer bar sits at the bottom
-}
-let fitTimer;addEventListener("resize",()=>{clearTimeout(fitTimer);fitTimer=setTimeout(()=>{dayLayout=null;fitStage()},120)});
+let fitTimer;addEventListener("resize",()=>{clearTimeout(fitTimer);fitTimer=setTimeout(fitStage,120)});
 // ---------- Picture zoom: full screen, same monitor filter ----------
 function openZoom(src){
   const z=$("zoom");$("zoomPic").innerHTML=`<img src="${esc(src)}" alt="A frame from a LOST episode, enlarged"><span class="tag"><b>●</b> FEED 42 · ZOOM</span>`;
