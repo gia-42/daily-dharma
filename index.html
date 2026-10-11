@@ -148,7 +148,7 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .install{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.95rem;color:var(--dim)}
 .panel .screen.wide{max-width:600px}
 .stickybar{position:sticky;top:calc(-48px - env(safe-area-inset-top,0px));z-index:2;display:flex;align-items:center;gap:12px;
-  background:var(--crt);margin:-22px -20px 0;padding:18px 20px 12px;border-bottom:1px dashed var(--dim);border-radius:12px 12px 0 0;box-shadow:0 -60px 0 var(--crt)}
+  background:var(--crt);margin:-22px -20px 0;padding:18px 20px 12px;border-bottom:1px dashed var(--dim);border-radius:12px 12px 0 0}
 .stickybar h2{min-width:0;overflow-wrap:anywhere;font-size:1.6rem;letter-spacing:.06em}
 @media (max-width:440px){.stickybar h2{font-size:1.4rem;letter-spacing:.03em}.backbtn{font-size:1.3rem;padding:4px 10px}}
 .backbtn{flex:none;font-size:1.5rem;line-height:1;border:1px solid var(--phos);padding:6px 12px;min-height:40px}
@@ -260,7 +260,7 @@ const BANK=[
 [S1,"Which survivor won the lottery playing the Numbers?","Hurley","Sawyer","Bernard","Arzt"],
 [S1,"What is Hurley's real first name?","Hugo","Howard","Harold","Henry"],
 [S1,"Hurley first heard the Numbers from which fellow patient?","Leonard Simms","Sam Toomey","Randy Nations","Dave"],
-[S1,"Where did Hurley work before he won the lottery?","Mr. Cluck's Chicken Shack","A record store","A car wash","A bowling alley"],
+[S1,"Where did Hurley work before he won the lottery?","Mr. Cluck's Chicken Shack","Captain Crispy's Chicken Hut","Big Cluckin' Wings","Mama Hen's Fried Chicken"],
 [S1,"Before the crash, Locke could not walk. What did he use?","A wheelchair","Crutches","A cane","A walking frame"],
 [S1,"Which survivor often says \"Don't tell me what I can't do\"?","John Locke","Sawyer","Ana Lucia","Jack"],
 [S1,"Who is the French woman who has lived alone on the Island?","Danielle Rousseau","Charlotte Lewis","Juliet Burke","Naomi Dorrit"],
@@ -268,7 +268,7 @@ const BANK=[
 [S1,"Which U.S. Marshal was escorting Kate on Flight 815?","Edward Mars","Ray Mullen","Tom Brennan","Wayne Janssen"],
 [S1,"What is Sawyer's real name?","James Ford","Anthony Cooper","Tom Brennan","Frank Duckett"],
 [S1,"What does Sawyer usually call Kate?","Freckles","Sweetcheeks","Cupcake","Princess"],
-[S1,"Kate risks her life for a toy airplane that belonged to…","Tom Brennan","Her father","Jack","Sawyer"],
+[S1,"Kate risks her life for a toy airplane that belonged to…","Tom Brennan","Billy Hughes","Tom Bradford","Jason Mills"],
 [S1,"Jin and Sun are from which country?","South Korea","Japan","China","Vietnam"],
 [S1,"Which language does Sun secretly speak?","English","French","Spanish","Arabic"],
 [S1,"Sayid served as a communications officer in which country's army?","Iraq","Egypt","Syria","Jordan"],
@@ -300,7 +300,7 @@ const BANK=[
 [S2,"Which Other leads the attack that takes Walt from the raft?","Tom","Ethan Rom","Richard Alpert","Mikhail"],
 [S2,"Ben first claims to be Henry Gale, who crashed in a…","Hot-air balloon","Helicopter","Seaplane","Sailboat"],
 [S2,"What is Rose's husband's name?","Bernard","Leonard","Gerald","Horace"],
-[S2,"What is Bernard's profession?","Dentist","Pharmacist","Pilot","Accountant"],
+[S2,"What is Bernard's profession?","Dentist","Pharmacist","Optometrist","Podiatrist"],
 [S2,"Which name for the Monster appears on the blast door map?","Cerberus","Fenrir","Chimera","Smokey"],
 [S2,"Which Dharma station is the medical facility where Claire was taken?","The Staff","The Pearl","The Orchid","The Lamp Post"],
 [S3,"Which station on the smaller island holds Jack, Kate and Sawyer captive?","The Hydra","The Flame","The Pearl","The Tempest"],
@@ -325,17 +325,17 @@ const BANK=[
 [S4,"Which mercenary wears a heart monitor wired to the freighter's bomb?","Martin Keamy","Omar","George Minkowski","Danny Pickett"],
 [S4,"What alias does Michael use aboard the freighter?","Kevin Johnson","Henry Gale","Jeremy Bentham","Tom Brennan"],
 [S4,"What name does Locke use off the Island?","Jeremy Bentham","Henry Gale","Jim LaFleur","Hugo Reyes"],
-[S4,"How many survivors become famous as the Oceanic Six?","Six","Five","Seven","Eight"],
+[S4,"When the survivors leave the island, they become famous as the Oceanic _____?","Six","Five","Seven","Eight"],
 [S4,"Which of these was NOT one of the Oceanic Six?","Sawyer","Hurley","Sayid","Kate"],
 [S4,"In \"The Constant\", who is Desmond's constant?","Penny","Daniel Faraday","Charlie","Kelvin"],
-[S4,"What is the name of Sun's daughter?","Ji Yeon","Min Ji","Alex","Soo Jin"],
+[S4,"What is the name of Sun's daughter?","Ji Yeon","Min Ji","Ha Eun","Soo Jin"],
 [S4,"How does Ben move the Island?","He turns a frozen wheel","He enters the Numbers","He pulls a stone cork","He detonates a bomb"],
 [S4,"In which station is the frozen wheel hidden?","The Orchid","The Swan","The Flame","The Tempest"],
 [S4,"What company does Sun's father run?","Paik Heavy Industries","Hanso Group","Widmore Industries","Mittelos Bioscience"],
 [S5,"In which year do Sawyer, Juliet, Jin and Miles join the Dharma Initiative?","1977","1954","1988","2004"],
 [S5,"What name does Sawyer go by in the Dharma Initiative?","Jim LaFleur","Jeremy Bentham","Kevin Johnson","Henry Gale"],
 [S5,"Who leads the Dharma Initiative on the Island in the 1970s?","Horace Goodspeed","Stuart Radzinsky","Pierre Chang","Phil"],
-[S5,"What do the survivors call the Dharma village?","The Barracks","The Compound","Othersville","The Commune"],
+[S5,"What is the Dharma Initiative's village on the Island called?","The Barracks","The Compound","Othersville","The Commune"],
 [S5,"Which flight brings the Oceanic Six back to the Island?","Ajira 316","Oceanic 815","Ajira 108","Oceanic 23"],
 [S5,"Which station in Los Angeles tracks where the Island will be?","The Lamp Post","The Looking Glass","The Pearl","The Flame"],
 [S5,"Who is Daniel Faraday's mother?","Eloise Hawking","Charlotte Lewis","Penny Widmore","Diane Janssen"],
@@ -356,31 +356,28 @@ const BANK=[
 [S6,"Who pulls the stone from the Heart of the Island?","Desmond","Jack","Hurley","The Man in Black"],
 [S6,"Who becomes the Island's protector after Jack?","Hurley","Kate","Ben Linus","Richard Alpert"],
 [S6,"Who flies the Ajira plane off the Island in the finale?","Frank Lapidus","Sawyer","Kate","Richard Alpert"],
-[S6,"In the sideways world, what is Ben's job?","European history teacher","Hotel manager","Surgeon","Police detective"],
+[S6,"In the sideways world, what is Ben's job?","History teacher","Geography teacher","English teacher","Chemistry teacher"],
 [S6,"In the sideways world, what is Sawyer's job?","Police detective","Con man","Car salesman","Bartender"],
-[S6,"What is the name of Jack's son in the sideways world?","David","Aaron","Walt","Charlie"],
+[S6,"What is the name of Jack's son in the sideways world?","David","Peter","Mitchell","Lewis"],
 [S6,"Who greets Jack in the church in the finale?","Christian Shephard","Jacob","Desmond Hume","Eloise Hawking"],
-// Complete the quote
-["Complete the Quote","Jack, season 1: “Live together, ___.”","die alone","or not at all","as one","until we're rescued",1],
+["Complete the Quote","Jack: \"If we can't live together...\"","we're going to die alone","we're all going to die here","then there is no point in trying","we're not going to survive",1],
 ["Complete the Quote","Desmond: “See you in another ___, brother.”","life","world","time","place",2],
-["Complete the Quote","Charlie, at the end of the pilot: “Guys… where ___?”","are we","is Jack","is the plane","did they go",1],
+["Complete the Quote","Charlie: “Guys… where ___?”","are we","is Jack","is the plane","did they go",1],
 ["Complete the Quote","Christian Shephard to Jack in the finale: “Everybody dies sometime, ___.”","kiddo","son","Jack","buddy",6],
 ["Complete the Quote","Juliet's last words to Sawyer: “It ___.”","worked","ends","hurts","doesn't matter",6],
 ["Complete the Quote","Ben asks “What about me?” and Jacob answers: “What about ___?”","you","me","the island","your father",5],
-["Complete the Quote","The Others insist to Michael: “We're the good ___.”","guys","people","ones","side",2],
-["Complete the Quote","Locke, again and again: “We were brought here for a ___.”","reason","test","price","rescue",1],
+["Complete the Quote","Benjamin Linus: “We're the good ___.”","guys","people","ones","side",2],
+["Complete the Quote","Locke, “We were brought here for a ___.”","reason","test","price","rescue",1],
 ["Complete the Quote","Jacob: “It only ends once. Anything that happens before that is just ___.”","progress","a test","a dream","the beginning",5],
-// Who said it
 ["Who Said It","“I've looked into the eye of this island, and what I saw was beautiful.”","John Locke","Jacob","Ben Linus","Mr. Eko",1],
 ["Who Said It","“Do not mistake coincidence for fate.”","Mr. Eko","John Locke","Richard Alpert","Rose",2],
 ["Who Said It","“The universe has a way of course correcting.”","Eloise Hawking","Daniel Faraday","Jacob","Charles Widmore",3],
 ["Who Said It","Who tells Desmond that he needs to find a “constant”?","Daniel Faraday","Eloise Hawking","Penny Widmore","Charlie Pace",4],
-["Who Said It","Who calls himself a “man of science” in his clash with Locke, the “man of faith”?","Jack Shephard","Daniel Faraday","Sayid Jarrah","Ben Linus",2],
+["Who Said It","Who calls Jack a “man of science” and himself a “man of faith”?","John Locke","Mr. Eko","Ben Linus","Desmond Hume",2],
 ["Who Said It","Whose go-to word for every situation is “dude”?","Hurley","Charlie","Sawyer","Frank Lapidus",0],
 ["Who Said It","Whose trademark exclamation is “Son of a…!”?","Sawyer","Jack","Charlie","Miles",0],
 ["Who Said It","Which group greets each other with “Namaste”?","The Dharma Initiative","The Others","The tail section","Widmore's crew",0],
 ["Who Said It","What does the voice in the cabin whisper to Locke?","“Help me.”","“Run.”","“Go back.”","“Find me.”",3],
-// Episode titles
 ["Episode Titles","What is the season 1 finale called?","Exodus","Outlaws","Deus Ex Machina","Homecoming",1],
 ["Episode Titles","What is the season 2 finale called?","Live Together, Die Alone","Man of Science, Man of Faith","Three Minutes","The Hunting Party",2],
 ["Episode Titles","What is the season 3 finale called?","Through the Looking Glass","The Man Behind the Curtain","Greatest Hits","Not in Portland",3],
@@ -389,7 +386,7 @@ const BANK=[
 ["Episode Titles","What is the series finale called?","The End","The Candidate","What They Died For","Across the Sea",6],
 ["Episode Titles","In which episode does Desmond's mind jump between 1996 and 2004?","The Constant","The Variable","Flashes Before Your Eyes","Catch-22",4],
 ["Episode Titles","Which season 1 episode reveals that Locke used a wheelchair?","Walkabout","Deus Ex Machina","White Rabbit","Outlaws",1],
-["Episode Titles","Which season 1 episode reveals Hurley won the lottery with the Numbers?","Numbers","Solitary","Homecoming","Hearts and Minds",1],
+["Episode Titles","Which season 1 episode reveals Hurley won the lottery?","Numbers","Solitary","Homecoming","Hearts and Minds",1],
 ["Episode Titles","Which episode tells Richard Alpert's backstory?","Ab Aeterno","Dr. Linus","Recon","The Package",6],
 ["Episode Titles","Which episode shows Jacob and the Man in Black as children?","Across the Sea","The Substitute","Lighthouse","Sundown",6],
 ["Episode Titles","Which episode follows Locke off the Island using his alias?","The Life and Death of Jeremy Bentham","This Place Is Death","Namaste","Dead Is Dead",5],
@@ -398,7 +395,6 @@ const BANK=[
 ["Episode Titles","Which season 3 episode sends Desmond back to his past life in London?","Flashes Before Your Eyes","The Constant","Catch-22","The Brig",3],
 ["Episode Titles","What is the season 2 premiere called?","Man of Science, Man of Faith","Adrift","Orientation","What Kate Did",2],
 ["Episode Titles","What is the first Sawyer-centric episode called?","Confidence Man","Outlaws","The Long Con","Every Man for Himself",1],
-// Timeline
 ["Timeline","In which season does Boone die?","Season 1","Season 2","Season 3","Season 4",1],
 ["Timeline","In which season does Shannon die?","Season 2","Season 1","Season 3","Season 4",2],
 ["Timeline","In which season do Ana Lucia and Libby die?","Season 2","Season 1","Season 3","Season 4",2],
@@ -411,7 +407,173 @@ const BANK=[
 ["Timeline","In which season is Alex killed?","Season 4","Season 3","Season 5","Season 2",4],
 ["Timeline","In which season is Daniel Faraday shot by his mother?","Season 5","Season 4","Season 6","Season 3",5],
 ["Timeline","In which season does Sayid die on the submarine?","Season 6","Season 5","Season 4","Season 3",6],
+[S1,"What is Kate's last name?","Austen","Ford","Littleton","Carlyle"],
+[S1,"What is Claire's last name?","Littleton","Austen","Shephard","Lloyd"],
+[S1,"What is the name of Charlie's brother and Drive Shaft bandmate?","Liam","Owen","Simon","Patrick"],
+[S1,"What was Locke's job before the crash?","He worked at a box company","He was a bank teller","He sold cars","He was an airline mechanic"],
+[S1,"Why had Locke flown to Australia?","To go on a walkabout","To visit his father","For a job interview","To find his mother"],
+[S1,"What does Locke bring in his luggage?","A case of hunting knives","A rifle","A flare gun","A ham radio"],
+[S1,"What does Locke hunt to feed the survivors early on?","Wild boar","Deer","Goats","Wild horses"],
+[S1,"Which unexpected animal attacks the survivors in the jungle in season 1?","A polar bear","A tiger","A crocodile","A gorilla"],
+[S1,"Which novel is Sawyer seen reading on the beach in season 1?","Watership Down","Moby-Dick","The Hobbit","Heart of Darkness"],
+[S1,"Who discovers the hatch buried in the jungle?","Locke and Boone","Jack and Kate","Sayid and Shannon","Hurley and Charlie"],
+[S1,"Who tries to end the wounded marshal's suffering but misses his heart?","Sawyer","Jack","Kate","Sayid"],
+[S1,"Sayid tortures Sawyer to get back which item for Shannon?","Her asthma inhaler","Her sleeping pills","Her glasses","Her skin care products"],
+[S1,"What does Hurley discover while taking a census of the survivors?","Ethan wasn't on the plane","Claire was missing","Locke couldn't walk","Sayid had a radio"],
+[S1,"Who sets sail on the raft with Michael and Walt?","Sawyer and Jin","Jack and Kate","Sayid and Charlie","Locke and Boone"],
+[S1,"Who kidnaps baby Aaron in the season 1 finale?","Danielle Rousseau","Ethan Rom","Tom","Juliet"],
+[S1,"Who shoots Ethan Rom dead?","Charlie","Jack","Sayid","Locke"],
+[S1,"What was Christian Shephard's profession?","Surgeon","Anesthesiologist","Radiologist","Psychiatrist"],
+[S1,"Why was Jack in Sydney?","To bring his father's body home","For a medical conference","To visit his ex-wife","To perform a surgery"],
+[S1,"Which character wakes up in the jungle in the series' opening shot?","Jack","Kate","Locke","Charlie"],
+[S1,"What business does Boone's mother run?","A wedding company","A hotel chain","A fashion label","A law firm"],
+[S1,"What does Hurley build to help the survivors relax in season 1?","A golf course","A volleyball court","A fishing dock","A poker table"],
+[S1,"Besides construction work, what did Michael want to be?","An artist","A boxer","A chef","A musician"],
+[S1,"What is the name of Walt's mother?","Susan","Linda","Karen","Denise"],
+[S1,"What job does Jin do for Sun's father?","He's his enforcer","He's his chauffeur","He's his accountant","He's his chef"],
+[S1,"What was Sun secretly planning at the Sydney airport?","To leave Jin","To meet her father","To buy a gun","To smuggle diamonds"],
+[S1,"How was Locke paralyzed?","His father pushed him out of a window","A car accident","A fall while hunting","A workplace accident"],
+[S2,"What is the name of Desmond's sailboat?","The Elizabeth","The Kahana","The Searcher","The Black Rock"],
+[S2,"Why was Desmond sailing when he reached the Island?","He was in a race around the world","He was fleeing the army","He was searching for Penny","He was delivering cargo"],
+[S2,"What profession does Libby claim to have?","Clinical psychologist","Nurse","Lawyer","Teacher"],
+[S2,"Where had Libby seen Hurley before the crash?","In a mental institution","At Mr. Cluck's","At the Sydney airport","At a lottery office"],
+[S2,"What is the name of Mr. Eko's brother?","Yemi","Chidi","Tunde","Emeka"],
+[S2,"What did Eko pretend to be in Nigeria?","A priest","A doctor","A soldier","A teacher"],
+[S2,"What is hidden inside the Virgin Mary statues on the Beechcraft?","Heroin","Cocaine","Weed","Methamphetamine"],
+[S2,"How many Others does Mr. Eko kill on the tail section's first night?","Two","One","Three","Four"],
+[S2,"After killing the Others, how long does Eko stay silent?","40 days","7 days","23 days","108 days"],
+[S2,"Which tail section survivor unmasks and kills the Other named Goodwin?","Ana Lucia","Mr. Eko","Bernard","Libby"],
+[S2,"Which flight attendant survives in the tail section?","Cindy","Libby","Nikki","Naomi"],
+[S2,"Who does Michael free from the Swan's armory?","Henry Gale","Desmond","Sawyer","Ana Lucia"],
+[S2,"Which four people does Michael have to bring to the Others?","Jack, Kate, Sawyer and Hurley","Jack, Locke, Sayid and Kate","Sawyer, Jin, Sun and Hurley","Kate, Claire, Charlie and Locke"],
+[S2,"Who catches “Henry Gale” in a net and leads Sayid to him?","Danielle Rousseau","Mr. Eko","Ana Lucia","Desmond"],
+[S2,"What happens when the Swan's countdown runs out?","A huge electromagnetic surge","The hatch floods","The lights go out forever","A bomb goes off"],
+[S2,"Who turns the failsafe key under the Swan?","Desmond","Locke","Eko","Jack"],
+[S2,"Who is shot when the Others attack the raft?","Sawyer","Michael","Jin","Walt"],
+[S2,"What is the name of Jack's ex-wife?","Sarah","Julie","Helena","Clara"],
+[S2,"What is the name of the woman Locke nearly marries?","Helen","Sarah","Emily","Rachel"],
+[S2,"Which job does Hurley take on in the Swan?","Running the food pantry","Pushing the button","Guarding the guns","Fixing the computer"],
+[S2,"What does Sawyer con the survivors out of in “The Long Con”?","All the guns","All the food","The medicine","The raft"],
+[S2,"What is the name of the soldier who raised Kate?","Sam Austen","Wayne Janssen","Tom Brennan","Edward Mars"],
+[S2,"What was the name of the man Kate killed by blowing up his house?","Wayne","Tom","Edward","Kevin"],
+[S2,"Where do the Pearl's observation notebooks go?","Into a pneumatic tube","Into a safe","Into the ocean","Into a furnace"],
+[S2,"What is the name of Hurley's imaginary friend?","Dave","Leonard","Randy","Johnny"],
+[S3,"What is the name of Juliet's sister?","Rachel","Sarah","Helen","Amelia"],
+[S3,"What happens to Juliet's ex-husband Edmund?","He's hit by a bus","He's shot by Ben","He drowns","He falls from a building"],
+[S3,"Which novel is Juliet's book club discussing when Flight 815 crashes?","Carrie","Of Mice and Men","A Wrinkle in Time","The Shining"],
+[S3,"How did Ben's mother die?","Giving birth to him","In the Purge","In a car accident","From an illness on the Island"],
+[S3,"What is Ben's gassing of the Dharma Initiative called?","The Purge","The Incident","The Event","The Cleanse"],
+[S3,"What were Sawyer's and Kate's cages on the Hydra island built for?","Polar bears","Sharks","Prisoners","Dogs"],
+[S3,"What does Sawyer get for solving the puzzle in his cage?","A fish biscuit","Dog food","Water","Fruits"],
+[S3,"What is the name of Alex's boyfriend?","Karl","Tom","Ethan","Danny"],
+[S3,"In which room is Karl held for brainwashing?","Room 23","Room 42","Room 15","Room 8"],
+[S3,"Who blows up the Others' submarine?","Locke","Sayid","Ben","Juliet"],
+[S3,"Which game does Locke beat the Flame station's computer at?","Chess","Checkers","Backgammon","Poker"],
+[S3,"Whose death does Desmond keep foreseeing in season 3?","Charlie's","Jack's","Penny's","Claire's"],
+[S3,"Which TV show did Nikki act in?","Exposé","Lost Girls","Mr. Cluck's","Hawaii Five-O"],
+[S3,"What paralyzes Nikki and Paulo?","A spider bite","A poisoned dart","A gas leak","A snake bite"],
+[S3,"Who saves the beach camp by driving the Dharma van into the Others?","Hurley","Sawyer","Jin","Bernard"],
+[S3,"What surrounds Jacob's cabin?","A line of ash","A sonic fence","A circle of stones","Barbed wire"],
+[S3,"Which Other wears an eye patch?","Mikhail Bakunin","Tom","Richard Alpert","Danny Pickett"],
+[S3,"Who guards the Looking Glass station?","Bonnie and Greta","Tom and Pickett","Juliet and Ethan","Mikhail and Alex"],
+[S3,"Who shoots Danny Pickett?","Juliet","Kate","Sawyer","Alex"],
+[S3,"Where does Jack get his tattoos?","Thailand","Sydney","Los Angeles","Tokyo"],
+[S3,"Where does Sawyer kill Anthony Cooper?","Aboard the Black Rock","In the Swan","At Jacob's cabin","On the beach"],
+[S4,"What is the name of the Kahana's captain?","Gault","Keamy","Minkowski","Lapidus"],
+[S4,"How late does Faraday's rocket arrive at the freighter?","31 minutes","8 minutes","108 minutes","3 hours"],
+[S4,"On what date does Desmond finally call Penny?","Christmas Eve","New Year's Eve","Her birthday","Valentine's Day"],
+[S4,"What alias does Ben use when he checks into a Tunisian hotel?","Dean Moriarty","Henry Gale","Jeremy Bentham","Jim LaFleur"],
+[S4,"Where does Ben appear after turning the frozen wheel?","In Tunisia","In Los Angeles","In the Arctic","In London"],
+[S4,"Where does Hurley end up after leaving the Island?","Santa Rosa Mental Health Institute","Back at Mr. Cluck's","In prison","On a boat with Desmond"],
+[S4,"Who raises Aaron off the Island?","Kate","Claire's mother","Jack","Sun"],
+[S4,"Who does Locke find waiting in Jacob's cabin in “Cabin Fever”?","Christian Shephard and Claire","Jacob and Richard","Walt and Michael","Charlie and Boone"],
+[S4,"How does Michael die?","In the freighter explosion","Shot by Keamy","In the Swan implosion","Drowned in the Looking Glass"],
+[S4,"Who kills Martin Keamy?","Ben","Sayid","Jack","Locke"],
+[S4,"On which island did the Oceanic Six claim to have washed ashore?","Membata","Hydra","Sumba","Taveuni"],
+[S4,"Which Oceanic flight was Frank Lapidus supposed to pilot?","Oceanic 815","Oceanic 316","Oceanic 42","Oceanic 23"],
+[S4,"What is Charlotte Lewis's profession?","Anthropologist","Physicist","Doctor","Pilot"],
+[S4,"Whose body is in the coffin at the end of season 4?","John Locke's","Jack's father's","Charlie's","Michael's"],
+[S4,"What does Ben summon after Alex is killed?","The Smoke Monster","Richard and the Others","The Hostiles' army","A rescue boat"],
+[S5,"What sign shows someone is suffering from the time flashes?","Nosebleeds","Glowing eyes","Hearing whispers","Losing their voice"],
+[S5,"Who dies from the time-jump sickness?","Charlotte","Miles","Faraday","Juliet"],
+[S5,"Who tells Locke he'll have to die to bring the others back?","Richard Alpert","Ben","Christian Shephard","Jacob"],
+[S5,"What does Richard give Locke to hand to his younger self?","A compass","A knife","A key","A photograph"],
+[S5,"What job does Sawyer hold in the 1970s Dharma Initiative?","Head of security","Head mechanic","Station supervisor","Pilot"],
+[S5,"Which movie script does Hurley try to “improve” in 1977?","The Empire Strikes Back","Star Wars","Raiders of the Lost Ark","Jaws"],
+[S5,"What job is Jack given when he joins the 1977 Dharma Initiative?","Workman","Doctor","Security guard","Cook"],
+[S5,"What job is Hurley given in the 1977 Dharma Initiative?","Cook","Workman","Mechanic","Teacher"],
+[S5,"How does Juliet set off the bomb?","By hitting it with a rock","With a detonator","By shooting it","By cutting a wire"],
+[S5,"Where does Ajira 316 land?","On the Hydra island runway","On the main beach","In the ocean","At the Barracks"],
+[S5,"What is inside the crate Ilana's group carries to the statue?","Locke's body","Jacob's ashes","A hydrogen bomb","Dharma weapons"],
+[S5,"What does Faraday plan to do to change the future?","Detonate the hydrogen bomb","Destroy the Swan station","Kill young Ben","Warn the Dharma Initiative"],
+[S5,"Which future Other is born in 1977 while Sawyer is in Dharma?","Ethan","Alex","Tom","Richard"],
+[S6,"Where is Sayid revived after being shot?","In the Temple's spring","In the Swan","At the lighthouse","In the Orchid"],
+[S6,"Whose body does the Man in Black appear as in season 6?","Locke's","Christian's","Jacob's","Boone's"],
+[S6,"How does Ilana die?","Dynamite explodes","Shot by Widmore","Killed by the Monster","Falls from the cliffs"],
+[S6,"Who smashes the mirrors in Jacob's lighthouse?","Jack","Hurley","Sawyer","Ben"],
+[S6,"Who kills the woman who raised Jacob and the Man in Black?","The Man in Black","Jacob","Claudia","Richard Alpert"],
+[S6,"What turns the Man in Black into the Smoke Monster?","Jacob throws him into the Heart of the Island","Drinking from the Temple spring","A Dharma experiment","Touching the light"],
+[S6,"Who shoots the Man in Black just before Jack finishes him off?","Kate","Sawyer","Hurley","Ben"],
+[S6,"Who puts the stone back to restore the light?","Jack","Desmond","Hurley","Ben"],
+[S6,"Who agrees to be Hurley's “number two” on the Island?","Ben","Richard","Desmond","Miles"],
+[S6,"Where do Sawyer and Juliet meet again in the sideways world?","At a vending machine","At a police station","At a concert","In a hospital elevator"],
+[S6,"Who does Desmond work for in the sideways world?","Charles Widmore","Hurley","Ben Linus","Christian Shephard"],
+[S6,"What is Locke's job in the sideways world?","Substitute teacher","Box company manager","Home inspector","Police officer"],
+[S6,"Who owns Mr. Cluck's in the sideways world?","Hurley","Charles Widmore","Hurley's mother","Randy Nations"],
+[S6,"In the sideways world, who is Nadia married to?","Sayid's brother","Sayid","Sayid's cousin","Nobody"],
+[S6,"Who refuses to leave Sun as the submarine sinks?","Jin","Sayid","Sawyer","Jack"],
+[S6,"What tells Richard Alpert he is aging again?","A grey hair","A wrinkle","A nosebleed","A broken bone"],
+[S6,"What does the Man in Black want above all?","To leave the Island","To kill Jacob's candidates","To protect the light","To find his mother"],
+[S6,"Who shoots Charles Widmore?","Ben","Sayid","The Man in Black","Hurley"],
+[S6,"Who lies down beside Jack as he dies in the finale?","Vincent","Kate","Hurley","Christian Shephard"],
+[S6,"How does the series end?","Jack's eye closes","The plane explodes","The Island sinks","Desmond wakes up"],
+[S6,"What does Jacob do to the candidates in their pasts?","Touches them","Gives them a coin","Writes them a letter","Tells them the Numbers"],
+[S6,"Who is the mother of Jack's son in the sideways world?","Juliet","Sarah","Kate","Rachel"],
+["Who Said It","Who spends much of season 2 shouting “WAAALT!”?","Michael","Jack","Sawyer","Locke",2],
+["Who Said It","“They come, they fight, they destroy, they corrupt. It always ends the same.”","The Man in Black","Jacob","Ben Linus","Charles Widmore",5],
+["Who Said It","“Whatever happened, happened.”","Daniel Faraday","Jack Shephard","Richard Alpert","John Locke",5],
+["Complete the Quote","Locke: “Don't tell me what I ___!”","can't do","should do","have to do","already know",1],
+["Complete the Quote","Ben's first lie: “My name is Henry Gale. I'm from ___.”","Minnesota","Ohio","Wisconsin","Iowa",2],
+["Complete the Quote","The Swan orientation film: “This is the orientation film for Station ___ of the Dharma Initiative.”","3","1","6","4",2],
+["Complete the Quote","Christian in the finale: “Nobody does it alone, Jack. You needed all of them, and they needed ___.”","you","the Island","each other","Jacob",6],
+["Complete the Quote","The song playing as the hatch is opened: “Make Your Own Kind of ___”","Music","Magic","Luck","Life",2],
+["Episode Titles","In which episode does Hurley meet his imaginary friend again on the Island?","Dave","Everybody Hates Hugo","Tricia Tanaka Is Dead","Numbers",2],
+["Episode Titles","Which episode opens season 3 with the crash seen from the Others' side?","A Tale of Two Cities","The Glass Ballerina","Further Instructions","Not in Portland",3],
+["Episode Titles","In which episode is “Henry Gale” first found by Rousseau and Sayid?","One of Them","The Long Con","Maternity Leave","Lockdown",2],
+["Episode Titles","In which episode does Boone die?","Do No Harm","Deus Ex Machina","The Greater Good","Born to Run",1],
+["Episode Titles","Which episode reveals Ben's childhood and the Purge?","The Man Behind the Curtain","The Other Woman","One of Us","The Brig",3],
+["Episode Titles","Which episode tells Rose and Bernard's backstory?","S.O.S.","Two for the Road","Fire + Water","Collision",2],
+["Episode Titles","Which episode shows Juliet being recruited to the Island?","Not in Portland","One of Us","The Other Woman","Left Behind",3],
+["Episode Titles","Which episode shows the tail section's first days on the Island?","The Other 48 Days","Abandoned","Collision","Everybody Hates Hugo",2],
+["Episode Titles","Which season 4 episode tells Michael's story on the freighter?","Meet Kevin Johnson","The Economist","Eggtown","Something Nice Back Home",4],
+["Episode Titles","Which season 6 episode shows Ben as a sideways-world history teacher?","Dr. Linus","Sundown","The Package","Happily Ever After",6],
+["Episode Titles","In which episode is Sayid captured and tortured by Rousseau?","Solitary","Hearts and Minds","The Moth","Whatever the Case May Be",1],
+["Episode Titles","Which episode reveals that Locke's father conned him out of a kidney?","Deus Ex Machina","Walkabout","Outlaws","The Moth",1],
+["Episode Titles","In which episode do we learn that Kate is a fugitive?","Tabula Rasa","What Kate Did","Born to Run","Eggtown",1],
+["Episode Titles","Which season 5 episode tells Faraday's backstory and ends with his death?","The Variable","Jughead","Some Like It Hoth","Follow the Leader",5],
+["Episode Titles","Which episode shows Sawyer building a life in Dharma?","LaFleur","Namaste","Dead Is Dead","316",5],
+["Episode Titles","Which episode tells Nikki and Paulo's story?","Exposé","Par Avion","Left Behind","D.O.C.",3],
+["Episode Titles","Which season 3 episode reveals where Jack got his tattoos?","Stranger in a Strange Land","The Cost of Living","I Do","Tricia Tanaka Is Dead",3],
+["Timeline","In which season do the survivors blow the hatch open?","Season 1","Season 2","Season 3","Season 4",1],
+["Timeline","In which season do Michael and Walt leave the Island on a boat?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season does Ben first appear?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season does the Swan station implode?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season is the Smoke Monster first heard?","Season 1","Season 2","Season 3","Season 4",1],
+["Timeline","In which season does Jacob die?","Season 5","Season 4","Season 6","Season 3",5],
+["Timeline","In which season do the Oceanic Six return to the Island?","Season 5","Season 4","Season 6","Season 3",5],
+["Timeline","In which season does Ana Lucia first appear?","Season 2","Season 1","Season 3","Season 4",2],
+["Timeline","In which season do the freighter people arrive?","Season 4","Season 3","Season 5","Season 2",4],
+["Timeline","In which season is Rousseau killed?","Season 4","Season 3","Season 5","Season 2",4],
+["Timeline","In which season do the flash-sideways begin?","Season 6","Season 5","Season 4","Season 3",6],
+["Timeline","In which season does Charlotte die?","Season 5","Season 4","Season 6","Season 3",5],
+["Timeline","In which season does Richard Alpert first appear?","Season 3","Season 2","Season 4","Season 1",3],
+["Timeline","In which season is Locke killed off the Island?","Season 5","Season 4","Season 6","Season 3",5],
 ];
+// Edited questions keep their original ID so players' stats stay linked.
+const ID_OVERRIDES={"When the survivors leave the island, they become famous as the Oceanic _____?": "x4xw1r", "What is the Dharma Initiative's village on the Island called?": "1xduo4t", "Jack: \"If we can't live together...\"": "1bf75w0", "Charlie: “Guys… where ___?”": "cblhp6", "Benjamin Linus: “We're the good ___.”": "fl46zd", "Locke, “We were brought here for a ___.”": "xb0y78", "Who calls Jack a “man of science” and himself a “man of faith”?": "xwa895", "Which season 1 episode reveals Hurley won the lottery?": "pj1qty", "Locke: “Don't tell me what I ___!”": "1j8sroe", "In which episode do we learn that Kate is a fugitive?": "olptrb", "Which episode shows Sawyer building a life in Dharma?": "1be99i8"};
+// Difficulty from the review sheet: 1 very easy, 2 easy, 3 medium, 4 hard, 5 very hard.
+const LEVEL={"1xpbfp1": 2, "156qu3v": 2, "p7bpr7": 2, "nvahzs": 2, "at05hm": 2, "10ghowr": 5, "19oinxj": 1, "18f57ya": 3, "k2skdd": 1, "1x4xqdi": 1, "13pi6oc": 1, "2useah": 4, "oagii2": 4, "1xav5g5": 1, "63p51p": 1, "t5p6gj": 2, "5xvy1t": 3, "1gv7qqy": 5, "13d90h6": 2, "1wqd7g2": 1, "przvdt": 5, "a79yyv": 2, "1k1wxy1": 1, "1ga8fnw": 2, "5odfb6": 2, "wdkcx1": 1, "15l22s5": 3, "17iqi7c": 2, "1y2oly": 2, "95hyhv": 3, "zyqvr3": 1, "38wqwx": 3, "x4zfkb": 3, "18vjhux": 2, "o0l1c6": 3, "6sbej5": 2, "1285b11": 1, "452ir1": 1, "1gdayv1": 3, "29v5nu": 4, "1r2vyzp": 2, "1rgwhr3": 3, "r0kol6": 4, "1x4woq4": 5, "1jc0t4j": 5, "enasas": 2, "i8v5di": 3, "1jloq8y": 2, "1w655z1": 2, "m6wie2": 3, "ehyit0": 2, "v1fvdv": 2, "1pd2ul2": 3, "1vvcrm4": 5, "1uygun6": 5, "1xgu18m": 3, "1oesd11": 2, "lvpsdk": 2, "yyrhjc": 3, "11y82ii": 3, "1q4s2ji": 2, "pzpoo1": 2, "c67ip8": 2, "6ion12": 2, "1ujw9vd": 3, "1h08dmd": 2, "h94jhx": 1, "1572s2n": 3, "byn8un": 1, "1cbxvom": 5, "1493fiz": 2, "1tknuvr": 1, "twlhad": 1, "784g0s": 2, "gny5tp": 4, "1mgnifp": 3, "mnm8ka": 2, "x4xw1r": 2, "d1s429": 2, "wmn6q8": 1, "bx1s1z": 4, "1nzou0p": 2, "1y8pih6": 5, "1onsfr9": 3, "1qpmh9w": 3, "1l2vnar": 2, "42i5wu": 4, "1xduo4t": 4, "1m31okl": 2, "1ai52i7": 4, "9rczvc": 3, "1xzqtay": 3, "1wsfs8y": 2, "kj9vt9": 3, "1grm882": 2, "v8ae4t": 2, "120je9a": 2, "1rqp214": 5, "jwq6xy": 4, "1unb1hu": 4, "gmm2u": 2, "1npyax": 4, "upyo6o": 5, "xfdoox": 5, "1hb9vi0": 1, "aokcpc": 4, "r1iuop": 2, "yi83ch": 2, "9ijhw3": 4, "5jmn11": 1, "1cx33ux": 4, "1mdiqjf": 2, "1bf75w0": 1, "1whxq9": 1, "cblhp6": 3, "i8vrr1": 3, "pta4ri": 2, "m2hnnc": 3, "fl46zd": 2, "xb0y78": 3, "2df5e4": 3, "142676k": 3, "196wefn": 3, "1adek7a": 3, "pw9g5b": 3, "xwa895": 1, "17j4fwj": 1, "1muhl44": 1, "cpj6vr": 2, "1dw6ax0": 3, "15huvmd": 3, "12hrlxy": 3, "1xfl5gv": 2, "3ceunc": 3, "rgxu5d": 3, "19abbrk": 1, "17zflie": 2, "1lwenk9": 2, "pj1qty": 2, "2q1xb7": 3, "ra9ry0": 3, "mxktr3": 2, "y1ooi": 4, "1soslx5": 4, "1qhuyyw": 2, "1b3zefa": 3, "1vodsn9": 3, "13y25sv": 2, "hunugl": 3, "1p3krm1": 3, "7mdgoz": 2, "8h0ze2": 2, "ztt07e": 3, "1tl8hz0": 3, "1wew825": 3, "1r0rxek": 3, "1wxbnwy": 4, "1c37lk": 4, "ekcc5u": 1, "1xlsojm": 2, "1d23raz": 3, "12ithqm": 3, "1928g1l": 3, "duksxs": 2, "6ajww2": 2, "1arz9d5": 3, "1v0bzud": 2, "nrt4yl": 5, "1d75b4j": 2, "1inos34": 3, "zg4yhb": 3, "1ikkn33": 3, "d3yq3h": 2, "1pnlxku": 3, "1owwa8k": 3, "npdznp": 3, "1nsulmv": 2, "d54fe7": 2, "mlgkts": 4, "1ii1a4n": 3, "16ze9dd": 4, "1ubcx4c": 5, "q9fb99": 3, "1yobj0a": 2, "1ccg30n": 2, "1jjsena": 3, "1ky6ps9": 3, "zgu1m0": 3, "1mbobrp": 2, "e6l3p1": 3, "1nst6ts": 2, "1jzfpp7": 2, "wyl0rg": 4, "13rom4e": 3, "1o1365z": 2, "10piibq": 3, "1wt7wgk": 1, "1tt6vpm": 3, "f24oqj": 2, "sciym4": 1, "1kk1ip1": 2, "54mzq0": 3, "dofw4z": 3, "63ct4g": 3, "5ezei9": 3, "vav92w": 3, "1qokq75": 4, "1r5lod1": 4, "1qm0iun": 3, "1ruklsf": 3, "1vbd8ii": 5, "1wo395t": 2, "uqfg2k": 5, "w7osjl": 3, "fhpxlx": 4, "1n8aot5": 2, "qfzyol": 2, "r7hg7r": 4, "1w4aeui": 4, "29uivx": 2, "fbrcry": 2, "o8htfu": 1, "1h2fcrm": 3, "kkvajb": 3, "sa2tum": 3, "27bned": 3, "1s3qrp9": 2, "g2h3ui": 3, "e3pg1o": 4, "11mhzyb": 2, "6fibp6": 3, "11r1y04": 5, "4xz6bc": 5, "m95w2h": 3, "4qfdl7": 4, "smtndz": 3, "1firggh": 1, "9siyyp": 1, "yhqmz3": 2, "wwp77e": 3, "w9ek1x": 3, "1eyxm7a": 5, "qjyrs6": 2, "1mkw8k4": 4, "1y13z84": 1, "g7k1x4": 2, "ryruxa": 2, "1labpjz": 2, "9bucsl": 3, "123qxlx": 3, "qvjszl": 4, "wdabvw": 3, "f9c0ix": 3, "sck470": 4, "1ay4gya": 2, "bl5zke": 2, "18und93": 3, "4wg6uf": 2, "17zs4wi": 3, "yslt4h": 3, "1ckvywz": 2, "1pul3we": 3, "17dkhzj": 2, "wvpx7h": 3, "12zqvt7": 2, "1ey4cr3": 3, "q5yikl": 2, "gelsr9": 2, "1vg9nl": 2, "1ljhqm0": 2, "f72kq": 2, "1fbj4jb": 2, "12hd5j": 2, "1uf4ogq": 1, "1n2uhgy": 2, "1b31ads": 2, "9yi6zd": 3, "1gsas7h": 3, "z9mjl4": 2, "zfl2uj": 2, "ztoehp": 3, "109pb75": 1, "nk96hg": 3, "3tpg2y": 3, "1j8sroe": 1, "1bj51hv": 3, "1vymkfg": 5, "1bqjvne": 1, "10fndy1": 2, "6mls0g": 2, "ewn9e4": 3, "b7h1jm": 2, "19xzdzp": 5, "1ez8i84": 3, "b6tvic": 4, "1t5o38g": 3, "nhv8ni": 1, "ng8wbb": 2, "tu6777": 2, "1sbyct3": 4, "16kyp1o": 5, "olptrb": 3, "1ujo8jx": 2, "1be99i8": 2, "1scfn1h": 3, "1qaefmm": 2, "nbo8uj": 2, "1pjluet": 2, "gwnyq8": 2, "s8kgjs": 4, "1nttjcz": 1, "1qzuv99": 4, "1tuox0a": 3, "1che5s5": 2, "x0z88l": 3, "1mcl85n": 4, "143sa46": 1, "k52hqo": 4, "1pc8s1m": 4, "1u0ikqz": 4};
+
 
 const NUMS=[4,8,15,16,23,42], PER_DAY=6, EPOCH=new Date(2026,9,9); // day #1
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -436,17 +598,32 @@ function tagsFor(b){
   const m=/^Season (\d)/.exec(b[0]);
   return{chars,season:m?+m[1]:(b[6]||0),type:m?"Island Trivia":b[0]};
 }
-const META=BANK.map(b=>({id:qid(b[1]),...tagsFor(b)}));
+const META=BANK.map(b=>{const id=ID_OVERRIDES[b[1]]||qid(b[1]);return{id,level:LEVEL[id]||3,...tagsFor(b)}});
 const BY_ID=Object.fromEntries(META.map((m,i)=>[m.id,i]));
 function makeQ(bi,n,qi){const b=BANK[bi],opts=shuffle([b[2],b[3],b[4],b[5]],n*108+qi+42);return{...META[bi],era:b[0],q:b[1],opts,answer:opts.indexOf(b[2])}}
+// Each day ramps from easy to hard: 3 easy (very easy first), 2 medium, then 1 hard to close on No. 42.
+// The split follows the review sheet (about 47% easy, 33% medium, 19% hard), so all three pools last ~50 days.
+// Each pool rotates through its own shuffled order, so no question repeats until its pool has been used up.
+const SEED=4848;
+const TIERS=[{levels:[1,2],per:3,salt:11},{levels:[3],per:2,salt:23},{levels:[4,5],per:1,salt:42}];
+const POOLS=TIERS.map(t=>BANK.map((_,i)=>i).filter(i=>t.levels.includes(META[i].level)));
+function takeFrom(pool,per,n,salt){
+  const out=[];let pos=(n-1)*per;
+  while(out.length<per){const r=Math.floor(pos/pool.length),bi=shuffle(pool,SEED+r*4242+salt)[pos%pool.length];if(!out.includes(bi))out.push(bi);pos++}
+  return out;
+}
 function questionsFor(n){
-  const per=Math.floor(BANK.length/PER_DAY), idx=n-1, round=Math.floor(idx/per), slot=idx%per;
-  const order=shuffle(BANK.map((_,i)=>i),815+round*4242);
-  return order.slice(slot*PER_DAY,slot*PER_DAY+PER_DAY).map((bi,qi)=>makeQ(bi,n,qi));
+  const picked=TIERS.flatMap((t,k)=>takeFrom(POOLS[k],t.per,n,t.salt)).sort((a,b)=>META[a].level-META[b].level);
+  return picked.map((bi,qi)=>makeQ(bi,n,qi));
 }
 // A day already started keeps its exact questions, even if the bank grows later.
 function questionsFromIds(ids,n){if(!ids||ids.length!==PER_DAY||!ids.every(id=>id in BY_ID))return null;return ids.map((id,qi)=>makeQ(BY_ID[id],n,qi))}
 let QS=questionsFor(dayNo);
+// Days whose questions were swapped after people had played them. A result saved for one of these
+// days under its old questions is discarded, here and in the cloud copy, so the day can be played fresh.
+const REFRESHED_DAYS=["2026-10-10","2026-10-11"];
+const dayNoOf=k=>Math.max(1,Math.round((parseYmd(k)-EPOCH)/864e5)+1);
+const staleDay=(k,h)=>REFRESHED_DAYS.includes(k)&&!!h&&(h.qids||[]).join()!==questionsFor(dayNoOf(k)).map(q=>q.id).join();
 
 // ---------- Local store (cache on this device; the cloud copy wins when logged in) ----------
 const LS="dailyDharma.v3";   // stats reset on Oct 9, 2026: older stores are ignored
@@ -454,6 +631,8 @@ try{localStorage.removeItem("dailyDharma");localStorage.removeItem("dailyDharma.
 function load(){try{const d=JSON.parse(localStorage.getItem(LS)||"{}");d.history=d.history||{};return d}catch(e){return{history:{}}}}
 function save(d){try{localStorage.setItem(LS,JSON.stringify(d))}catch(e){}}
 let data=load();
+for(const k of Object.keys(data.history))if(staleDay(k,data.history[k]))delete data.history[k];
+save(data);
 let state=data.history[key]||{picks:[],done:false,score:0};
 QS=questionsFromIds(state.qids,dayNo)||QS;
 
@@ -655,7 +834,7 @@ async function syncAll(){
   const uid=session.user.id;setSync("SYNCING");
   const{data:rows,error}=await sb.from("results").select("day,picks,score,done,qids,ok").eq("user_id",uid);
   if(error)throw error;
-  const remote={};rows.forEach(r=>remote[r.day]=dayRecord(r));
+  const remote={};rows.forEach(r=>{if(!staleDay(r.day,r))remote[r.day]=dayRecord(r)});
   const up=[];
   new Set([...Object.keys(remote),...Object.keys(data.history)]).forEach(k=>{
     const l=data.history[k],r=remote[k],w=better(l,r);
@@ -717,7 +896,7 @@ async function loadSocial(){
       const{data:rows,error:e2}=await sb.from("results").select("user_id,day,picks,score,done,qids,ok").in("user_id",friends);
       if(e2)throw e2;
       friends.forEach(f=>hist[f]={});
-      rows.forEach(r=>{(hist[r.user_id]||(hist[r.user_id]={}))[r.day]=dayRecord(r)});
+      rows.forEach(r=>{if(!staleDay(r.day,r))(hist[r.user_id]||(hist[r.user_id]={}))[r.day]=dayRecord(r)});
     }
   }
   social={loaded:true,links,names,hist};
