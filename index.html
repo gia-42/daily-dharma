@@ -214,6 +214,40 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .pic::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.30) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.6) 100%)}
 .pic .tag{position:absolute;top:6px;left:6px;z-index:1;font-size:.9rem;line-height:1.1;color:var(--phos);background:rgba(5,6,5,.72);padding:1px 6px;text-shadow:0 0 5px rgba(168,197,156,.5);letter-spacing:.06em}
 .pic .tag b{color:var(--bad);font-weight:400;animation:blink 1.2s steps(1) infinite}
+/* ---------- App frame: the page never scrolls ---------- */
+:root{padding:0!important}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px))}
+.wrap{height:100%;max-width:600px;margin:0 auto;padding-block:clamp(8px,1.6vh,18px) 0;display:flex;flex-direction:column}
+.wrap>.screen{position:relative;flex:1;min-height:0;gap:clamp(8px,1.5vh,16px);padding:clamp(14px,2.2vh,22px) 20px}
+.wrap>.screen>*{flex:none}
+#stage{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+#stage.scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#stage>.card{flex:none}
+footer{flex:none;margin:0;padding:7px 2px 6px;font-size:.78rem;line-height:1.2;white-space:nowrap;display:flex;justify-content:center;gap:.6em;min-width:0}
+footer #footText{overflow:hidden;text-overflow:ellipsis;min-width:0}
+footer a{flex:none}
+.install{flex:none;margin:-2px 0 6px;font-size:.8rem}
+.ghostspace{visibility:hidden}
+.recap li{grid-template-columns:1.3em minmax(0,1fr) auto;align-items:baseline;white-space:nowrap}
+.recap .rq{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.recap li b{max-width:13em;overflow:hidden;text-overflow:ellipsis;text-align:right}
+@media (max-height:740px){h1{font-size:1.7rem}.stat b{font-size:1.6rem}.stats{padding-top:8px}}
+@media (max-height:620px){.wrap>.screen>section{display:none}}
+/* ---------- Panels open inside the frame; their content scrolls, the header stays on top ---------- */
+.panel{position:absolute;inset:-2px;z-index:4;padding:0;background:transparent;display:block;overflow:hidden}
+.panel .screen{width:100%;max-width:none;height:100%;margin:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.panel .screen.wide{max-width:none}
+.panel .stickybar{top:-22px}
+/* ---------- Picture zoom ---------- */
+button.pic{display:block;width:100%;padding:0;font:inherit;cursor:zoom-in}
+#stage .pic{width:auto;max-width:100%;height:clamp(120px,29vh,300px);margin:0 auto}
+button.pic:focus-visible{outline:2px solid var(--phos);outline-offset:2px}
+.pic .tag.zr{left:auto;right:6px}
+.zoom{position:fixed;inset:0;z-index:20;background:rgba(3,4,3,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:env(safe-area-inset-top,0px) 10px env(safe-area-inset-bottom,0px);cursor:zoom-out}
+.zoom .pic.big{width:min(100%,calc((100vh - 70px)*16/9));max-width:1200px}
+.zoom .pic.big .tag{font-size:1.05rem}
+.zoomhint{margin:0;font-size:.9rem;color:var(--dim);letter-spacing:.08em}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -241,14 +275,14 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
       <div class="stat"><b id="sBest">0</b><span>Best streak</span></div>
     </div>
   </section>
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" hidden>
+    <div class="screen" id="panelBody"></div>
+  </div>
  </div>
- <footer>SIX QUESTIONS DAILY, ONE FOR EACH NUMBER. NEW SET AT MIDNIGHT. UNOFFICIAL FAN QUIZ. <a href="privacy.html" style="color:inherit">PRIVACY</a></footer>
+ <footer><span id="footText">SIX QUESTIONS DAILY · NEW SET AT MIDNIGHT · UNOFFICIAL FAN QUIZ</span><a href="privacy.html" style="color:inherit">PRIVACY</a></footer>
  <div class="install" id="installRow" hidden></div>
 </div>
-
-<div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" hidden>
-  <div class="screen" id="panelBody"></div>
-</div>
+<div class="zoom" id="zoom" role="dialog" aria-label="Enlarged frame" hidden><div class="pic big" id="zoomPic"></div><p class="zoomhint">TAP ANYWHERE TO CLOSE</p></div>
 
 <script>
 // [season, question, correct, wrong1, wrong2, wrong3]
@@ -726,7 +760,7 @@ function makeQ(bi,n,qi){const b=BANK[bi],opts=shuffle([b[2],b[3],b[4],b[5]],n*10
 // Each day: five questions ramping from easy to hard (2 easy, very easy first; 2 medium; 1 hard),
 // then a picture question to close on No. 42. Pools rotate separately: easy ~75 days, medium ~53, hard ~62.
 // Each pool rotates through its own shuffled order, so no question repeats until its pool has been used up.
-const SEED=4849;
+const SEED=5020;
 const TIERS=[{levels:[1,2],per:2,salt:11},{levels:[3],per:2,salt:23},{levels:[4,5],per:1,salt:42},{levels:[6],per:1,salt:108}];
 const POOLS=TIERS.map(t=>BANK.map((_,i)=>i).filter(i=>t.levels.includes(META[i].level)));
 function takeFrom(pool,per,n,salt){
@@ -785,11 +819,13 @@ function showQuestion(i,revealed){
   const q=QS[i]; const pick=state.picks[i];
   stage.innerHTML=`<div class="card">
     <div class="era"><span>${q.era}</span><span>No. ${NUMS[i]} · ${i+1} of ${PER_DAY}</span></div>
-    ${q.img?`<div class="pic"><img src="${esc(q.img)}" alt="A frame from a LOST episode" decoding="async"><span class="tag"><b>●</b> FEED ${String(NUMS[i]).padStart(2,"0")}</span></div>`:""}
+    ${q.img?`<button class="pic" id="picBtn" type="button" aria-label="Enlarge the frame"><img src="${esc(q.img)}" alt="A frame from a LOST episode" decoding="async"><span class="tag"><b>●</b> FEED ${String(NUMS[i]).padStart(2,"0")}</span><span class="tag zr">[ + ]</span></button>`:""}
     <p class="q" id="qtext">${esc(q.q)}</p>
     <div class="opts">${q.opts.map((o,j)=>{let c="";if(revealed){c=j===q.answer?"right":(j===pick?"wrong":"dim")}return`<button class="opt ${c}" id="opt${j}" data-j="${j}" ${revealed?"disabled":""}><span class="k">[${"ABCD"[j]}]</span><span>${esc(o)}</span></button>`}).join("")}</div>
-    ${revealed?`<button class="next" id="nextBtn">${i===PER_DAY-1?"[ VIEW RESULTS ]":"[ EXECUTE ]"}</button>`:""}
+    ${revealed?`<button class="next" id="nextBtn">${i===PER_DAY-1?"[ VIEW RESULTS ]":"[ EXECUTE ]"}</button>`:`<span class="next ghostspace" aria-hidden="true">[ EXECUTE ]</span>`}
   </div>`;
+  fitStage();
+  if($("picBtn")){$("picBtn").onclick=()=>openZoom(q.img);const im=$("picBtn").querySelector("img");if(!im.complete)im.onload=fitStage}
   if(!revealed)typeOut($("qtext"),q.q);else clearTimeout(typeTimer);
   if(!revealed){stage.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{state.picks[i]=+b.dataset.j;persist();pips();showQuestion(i,true)})}
   else{const n=$("nextBtn");n.focus();n.onclick=()=>{if(i===PER_DAY-1)finish();else{pips();showQuestion(i+1,false)}}}
@@ -817,7 +853,7 @@ function showResults(){
     <div class="era"><span>Today's result</span><span>Orientation #${dayNo}</span></div>
     <p class="score">${s}<small> / ${PER_DAY}</small></p>
     <p class="verdict">${VERDICTS[s]}</p>
-    <ul class="recap">${QS.map((q,i)=>{const ok=state.picks[i]===q.answer;return`<li><span class="m ${ok?"g":"b"}">${ok?"✓":"✕"}</span><span>${esc(q.q)} <b>${esc(q.opts[q.answer])}</b></span></li>`}).join("")}</ul>
+    <ul class="recap">${QS.map((q,i)=>{const ok=state.picks[i]===q.answer;return`<li><span class="m ${ok?"g":"b"}">${ok?"✓":"✕"}</span><span class="rq">${esc(q.img?"Frame: which episode?":q.q)}</span><b>${esc(q.opts[q.answer])}</b></li>`}).join("")}</ul>
     <div class="row"><button class="ghost" id="shareBtn">Copy result</button><span class="toast" id="toast" aria-live="polite"></span></div>
     <div id="fallback"></div>
     <div class="counter" role="timer" aria-label="Time until the next set">
@@ -826,9 +862,10 @@ function showResults(){
     </div>
   </div>`;
   buildClock();
+  fitStage();
   $("shareBtn").onclick=()=>{const t=shareText();
     const fb=()=>{$("fallback").innerHTML=`<textarea class="sharebox" id="shareBox" rows="4" readonly>${esc(t)}</textarea>`;const x=$("shareBox");x.focus();x.select();$("toast").textContent="Select and copy"};
-    try{navigator.clipboard.writeText(t).then(()=>{$("toast").textContent="Copied"},fb)}catch(e){fb()}};
+    try{navigator.clipboard.writeText(t).then(()=>{$("toast").textContent="Copied"},fb)}catch(e){fb()};setTimeout(fitStage,50)};
   tick();
 }
 
@@ -894,7 +931,7 @@ function intro(){
   const BLOCKS=20, barText=k=>`[${"█".repeat(k)}${"░".repeat(BLOCKS-k)}] ${String(Math.round(k/BLOCKS*100)).padStart(3," ")}%`;
   const timers=[];
   const wait=ms=>new Promise(r=>timers.push(setTimeout(r,ms)));
-  const done=()=>{introSkipped=true;timers.forEach(clearTimeout);
+  const done=()=>{introSkipped=true;timers.forEach(clearTimeout);setTimeout(fitStage,0);
     for(const id in lines){$(id).textContent=lines[id]();$(id).classList.remove("cur")}
     $("bar").textContent=barText(BLOCKS);const b=$("startBtn");b.textContent=introStatus().label;b.hidden=false;b.focus();};
   $("startBtn").onclick=e=>{e.stopPropagation();start()};
@@ -1333,9 +1370,9 @@ function openPanel(kind,arg){
   else if(kind==="social"){
     const draw=(note,keepFocus)=>{
       if($("panel").hidden)return;
-      const typed=$("pFriend")?.value||"", y=$("panel").scrollTop;
+      const typed=$("pFriend")?.value||"", y=P.scrollTop;
       P.innerHTML=renderSocialPage(note);
-      $("pFriend").value=typed;$("panel").scrollTop=y;
+      $("pFriend").value=typed;P.scrollTop=y;
       $("pBackTop").onclick=closePanel;$("pClose").onclick=closePanel;
       $("pRefresh").onclick=async()=>{busy(true);panelMsg("REFRESHING...");try{await loadSocial();draw({ok:"Up to date."})}catch(e){draw({err:"Couldn't refresh. Check your connection."})}};
       $("pAddForm").onsubmit=async e=>{e.preventDefault();busy(true);panelMsg("SEARCHING...");
@@ -1384,6 +1421,24 @@ if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWor
     $("installBtn").onclick=async()=>{deferred.prompt();await deferred.userChoice;deferred=null;row.hidden=true}});
   addEventListener("appinstalled",()=>{row.hidden=true});
 })();
+
+// ---------- Keep each game screen inside the frame ----------
+// The stage never scrolls: if a screen is taller than the space (small phone, long question),
+// it is scaled down a little until it fits. Only a picture question may scroll, as a last resort.
+function fitStage(){
+  const st=$("stage"),c=st.firstElementChild;if(!c)return;
+  st.classList.remove("scroll");c.style.zoom="";
+  const min=c.querySelector(".pic")?.7:.6;let k=1;
+  while(st.scrollHeight>st.clientHeight+1&&k>min){k=Math.round((k-.04)*100)/100;c.style.zoom=k}
+  if(st.scrollHeight>st.clientHeight+1)st.classList.add("scroll");
+}
+let fitTimer;addEventListener("resize",()=>{clearTimeout(fitTimer);fitTimer=setTimeout(fitStage,120)});
+// ---------- Picture zoom: full screen, same monitor filter ----------
+function openZoom(src){
+  const z=$("zoom");$("zoomPic").innerHTML=`<img src="${esc(src)}" alt="A frame from a LOST episode, enlarged"><span class="tag"><b>●</b> FEED 42 · ZOOM</span>`;
+  z.hidden=false;z.onclick=()=>{z.hidden=true;$("picBtn")?.focus()};
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").click()});
 
 stats();intro();
 </script>
