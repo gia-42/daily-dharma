@@ -208,6 +208,12 @@ footer{font-size:.95rem;color:var(--dim);text-align:center;margin-top:14px}
 .danger:hover:not(:disabled),.danger:focus-visible{background:var(--bad);color:var(--crt)}
 @media (max-width:440px){.crow{grid-template-columns:minmax(0,1fr) 4.4em 4.4em;font-size:1.05rem}.frow{font-size:1.1rem}}
 .ln.namaste{margin-top:6px;letter-spacing:.06em}
+/* Picture questions: a 16:9 frame shown as a phosphor monitor feed */
+.pic{position:relative;aspect-ratio:16/9;max-width:100%;border:1px solid var(--dim);background:#000;overflow:hidden;box-shadow:0 0 12px rgba(168,197,156,.15)}
+.pic img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.85) hue-rotate(52deg) saturate(1.45) brightness(.92) contrast(1.15)}
+.pic::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.30) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.6) 100%)}
+.pic .tag{position:absolute;top:6px;left:6px;z-index:1;font-size:.9rem;line-height:1.1;color:var(--phos);background:rgba(5,6,5,.72);padding:1px 6px;text-shadow:0 0 5px rgba(168,197,156,.5);letter-spacing:.06em}
+.pic .tag b{color:var(--bad);font-weight:400;animation:blink 1.2s steps(1) infinite}
 .gbtn{min-height:44px;display:flex;align-items:center;color-scheme:normal;text-shadow:none}
 </style>
 <script src="https://accounts.google.com/gsi/client" async></script>
@@ -574,6 +580,120 @@ const ID_OVERRIDES={"When the survivors leave the island, they become famous as 
 // Difficulty from the review sheet: 1 very easy, 2 easy, 3 medium, 4 hard, 5 very hard.
 const LEVEL={"1xpbfp1": 2, "156qu3v": 2, "p7bpr7": 2, "nvahzs": 2, "at05hm": 2, "10ghowr": 5, "19oinxj": 1, "18f57ya": 3, "k2skdd": 1, "1x4xqdi": 1, "13pi6oc": 1, "2useah": 4, "oagii2": 4, "1xav5g5": 1, "63p51p": 1, "t5p6gj": 2, "5xvy1t": 3, "1gv7qqy": 5, "13d90h6": 2, "1wqd7g2": 1, "przvdt": 5, "a79yyv": 2, "1k1wxy1": 1, "1ga8fnw": 2, "5odfb6": 2, "wdkcx1": 1, "15l22s5": 3, "17iqi7c": 2, "1y2oly": 2, "95hyhv": 3, "zyqvr3": 1, "38wqwx": 3, "x4zfkb": 3, "18vjhux": 2, "o0l1c6": 3, "6sbej5": 2, "1285b11": 1, "452ir1": 1, "1gdayv1": 3, "29v5nu": 4, "1r2vyzp": 2, "1rgwhr3": 3, "r0kol6": 4, "1x4woq4": 5, "1jc0t4j": 5, "enasas": 2, "i8v5di": 3, "1jloq8y": 2, "1w655z1": 2, "m6wie2": 3, "ehyit0": 2, "v1fvdv": 2, "1pd2ul2": 3, "1vvcrm4": 5, "1uygun6": 5, "1xgu18m": 3, "1oesd11": 2, "lvpsdk": 2, "yyrhjc": 3, "11y82ii": 3, "1q4s2ji": 2, "pzpoo1": 2, "c67ip8": 2, "6ion12": 2, "1ujw9vd": 3, "1h08dmd": 2, "h94jhx": 1, "1572s2n": 3, "byn8un": 1, "1cbxvom": 5, "1493fiz": 2, "1tknuvr": 1, "twlhad": 1, "784g0s": 2, "gny5tp": 4, "1mgnifp": 3, "mnm8ka": 2, "x4xw1r": 2, "d1s429": 2, "wmn6q8": 1, "bx1s1z": 4, "1nzou0p": 2, "1y8pih6": 5, "1onsfr9": 3, "1qpmh9w": 3, "1l2vnar": 2, "42i5wu": 4, "1xduo4t": 4, "1m31okl": 2, "1ai52i7": 4, "9rczvc": 3, "1xzqtay": 3, "1wsfs8y": 2, "kj9vt9": 3, "1grm882": 2, "v8ae4t": 2, "120je9a": 2, "1rqp214": 5, "jwq6xy": 4, "1unb1hu": 4, "gmm2u": 2, "1npyax": 4, "upyo6o": 5, "xfdoox": 5, "1hb9vi0": 1, "aokcpc": 4, "r1iuop": 2, "yi83ch": 2, "9ijhw3": 4, "5jmn11": 1, "1cx33ux": 4, "1mdiqjf": 2, "1bf75w0": 1, "1whxq9": 1, "cblhp6": 3, "i8vrr1": 3, "pta4ri": 2, "m2hnnc": 3, "fl46zd": 2, "xb0y78": 3, "2df5e4": 3, "142676k": 3, "196wefn": 3, "1adek7a": 3, "pw9g5b": 3, "xwa895": 1, "17j4fwj": 1, "1muhl44": 1, "cpj6vr": 2, "1dw6ax0": 3, "15huvmd": 3, "12hrlxy": 3, "1xfl5gv": 2, "3ceunc": 3, "rgxu5d": 3, "19abbrk": 1, "17zflie": 2, "1lwenk9": 2, "pj1qty": 2, "2q1xb7": 3, "ra9ry0": 3, "mxktr3": 2, "y1ooi": 4, "1soslx5": 4, "1qhuyyw": 2, "1b3zefa": 3, "1vodsn9": 3, "13y25sv": 2, "hunugl": 3, "1p3krm1": 3, "7mdgoz": 2, "8h0ze2": 2, "ztt07e": 3, "1tl8hz0": 3, "1wew825": 3, "1r0rxek": 3, "1wxbnwy": 4, "1c37lk": 4, "ekcc5u": 1, "1xlsojm": 2, "1d23raz": 3, "12ithqm": 3, "1928g1l": 3, "duksxs": 2, "6ajww2": 2, "1arz9d5": 3, "1v0bzud": 2, "nrt4yl": 5, "1d75b4j": 2, "1inos34": 3, "zg4yhb": 3, "1ikkn33": 3, "d3yq3h": 2, "1pnlxku": 3, "1owwa8k": 3, "npdznp": 3, "1nsulmv": 2, "d54fe7": 2, "mlgkts": 4, "1ii1a4n": 3, "16ze9dd": 4, "1ubcx4c": 5, "q9fb99": 3, "1yobj0a": 2, "1ccg30n": 2, "1jjsena": 3, "1ky6ps9": 3, "zgu1m0": 3, "1mbobrp": 2, "e6l3p1": 3, "1nst6ts": 2, "1jzfpp7": 2, "wyl0rg": 4, "13rom4e": 3, "1o1365z": 2, "10piibq": 3, "1wt7wgk": 1, "1tt6vpm": 3, "f24oqj": 2, "sciym4": 1, "1kk1ip1": 2, "54mzq0": 3, "dofw4z": 3, "63ct4g": 3, "5ezei9": 3, "vav92w": 3, "1qokq75": 4, "1r5lod1": 4, "1qm0iun": 3, "1ruklsf": 3, "1vbd8ii": 5, "1wo395t": 2, "uqfg2k": 5, "w7osjl": 3, "fhpxlx": 4, "1n8aot5": 2, "qfzyol": 2, "r7hg7r": 4, "1w4aeui": 4, "29uivx": 2, "fbrcry": 2, "o8htfu": 1, "1h2fcrm": 3, "kkvajb": 3, "sa2tum": 3, "27bned": 3, "1s3qrp9": 2, "g2h3ui": 3, "e3pg1o": 4, "11mhzyb": 2, "6fibp6": 3, "11r1y04": 5, "4xz6bc": 5, "m95w2h": 3, "4qfdl7": 4, "smtndz": 3, "1firggh": 1, "9siyyp": 1, "yhqmz3": 2, "wwp77e": 3, "w9ek1x": 3, "1eyxm7a": 5, "qjyrs6": 2, "1mkw8k4": 4, "1y13z84": 1, "g7k1x4": 2, "ryruxa": 2, "1labpjz": 2, "9bucsl": 3, "123qxlx": 3, "qvjszl": 4, "wdabvw": 3, "f9c0ix": 3, "sck470": 4, "1ay4gya": 2, "bl5zke": 2, "18und93": 3, "4wg6uf": 2, "17zs4wi": 3, "yslt4h": 3, "1ckvywz": 2, "1pul3we": 3, "17dkhzj": 2, "wvpx7h": 3, "12zqvt7": 2, "1ey4cr3": 3, "q5yikl": 2, "gelsr9": 2, "1vg9nl": 2, "1ljhqm0": 2, "f72kq": 2, "1fbj4jb": 2, "12hd5j": 2, "1uf4ogq": 1, "1n2uhgy": 2, "1b31ads": 2, "9yi6zd": 3, "1gsas7h": 3, "z9mjl4": 2, "zfl2uj": 2, "ztoehp": 3, "109pb75": 1, "nk96hg": 3, "3tpg2y": 3, "1j8sroe": 1, "1bj51hv": 3, "1vymkfg": 5, "1bqjvne": 1, "10fndy1": 2, "6mls0g": 2, "ewn9e4": 3, "b7h1jm": 2, "19xzdzp": 5, "1ez8i84": 3, "b6tvic": 4, "1t5o38g": 3, "nhv8ni": 1, "ng8wbb": 2, "tu6777": 2, "1sbyct3": 4, "16kyp1o": 5, "olptrb": 3, "1ujo8jx": 2, "1be99i8": 2, "1scfn1h": 3, "1qaefmm": 2, "nbo8uj": 2, "1pjluet": 2, "gwnyq8": 2, "s8kgjs": 4, "1nttjcz": 1, "1qzuv99": 4, "1tuox0a": 3, "1che5s5": 2, "x0z88l": 3, "1mcl85n": 4, "143sa46": 1, "k52hqo": 4, "1pc8s1m": 4, "1u0ikqz": 4};
 
+// Picture questions, generated by pics.py: [type, question, answer, wrong×3, season, id, image]
+const PICS=[
+[
+"Visual Record",
+"Which episode is this frame from?",
+"Pilot",
+"The Beginning of the End",
+"Because You Left",
+"Man of Science, Man of Faith",
+1,
+"pic-S01E01",
+"pics/S01E01.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"Live Together, Die Alone",
+"The End",
+"The Incident",
+"Through the Looking Glass",
+2,
+"pic-S02E24",
+"pics/S02E24.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"A Tale of Two Cities",
+"Pilot",
+"LA X",
+"Because You Left",
+3,
+"pic-S03E01",
+"pics/S03E01.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"Through the Looking Glass",
+"The End",
+"There's No Place Like Home",
+"The Incident",
+3,
+"pic-S03E23-2",
+"pics/S03E23-2.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"Through the Looking Glass",
+"Live Together, Die Alone",
+"The End",
+"There's No Place Like Home",
+3,
+"pic-S03E23",
+"pics/S03E23.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"The Beginning of the End",
+"Because You Left",
+"Man of Science, Man of Faith",
+"Pilot",
+4,
+"pic-S04E01",
+"pics/S04E01.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"There's No Place Like Home",
+"Exodus",
+"Through the Looking Glass",
+"Live Together, Die Alone",
+4,
+"pic-S04E14",
+"pics/S04E14.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"The Incident",
+"Through the Looking Glass",
+"The End",
+"Exodus",
+5,
+"pic-S05E17",
+"pics/S05E17.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"The End",
+"Through the Looking Glass",
+"There's No Place Like Home",
+"Exodus",
+6,
+"pic-S06E18-2",
+"pics/S06E18-2.jpg"
+],
+[
+"Visual Record",
+"Which episode is this frame from?",
+"The End",
+"Live Together, Die Alone",
+"Through the Looking Glass",
+"There's No Place Like Home",
+6,
+"pic-S06E18",
+"pics/S06E18.jpg"
+]
+];
+
 
 const NUMS=[4,8,15,16,23,42], PER_DAY=6, EPOCH=new Date(2026,9,9); // day #1
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -598,14 +718,16 @@ function tagsFor(b){
   const m=/^Season (\d)/.exec(b[0]);
   return{chars,season:m?+m[1]:(b[6]||0),type:m?"Island Trivia":b[0]};
 }
-const META=BANK.map(b=>{const id=ID_OVERRIDES[b[1]]||qid(b[1]);return{id,level:LEVEL[id]||3,...tagsFor(b)}});
+// Picture questions join the bank as their own pool (level 6), always played last.
+if(typeof PICS!=="undefined")BANK.push(...PICS);
+const META=BANK.map(b=>{const pic=b[0]==="Visual Record",id=pic?b[7]:(ID_OVERRIDES[b[1]]||qid(b[1]));return{id,level:pic?6:(LEVEL[id]||3),img:pic?b[8]:null,...tagsFor(b)}});
 const BY_ID=Object.fromEntries(META.map((m,i)=>[m.id,i]));
 function makeQ(bi,n,qi){const b=BANK[bi],opts=shuffle([b[2],b[3],b[4],b[5]],n*108+qi+42);return{...META[bi],era:b[0],q:b[1],opts,answer:opts.indexOf(b[2])}}
-// Each day ramps from easy to hard: 3 easy (very easy first), 2 medium, then 1 hard to close on No. 42.
-// The split follows the review sheet (about 47% easy, 33% medium, 19% hard), so all three pools last ~50 days.
+// Each day: five questions ramping from easy to hard (2 easy, very easy first; 2 medium; 1 hard),
+// then a picture question to close on No. 42. Pools rotate separately: easy ~75 days, medium ~53, hard ~62.
 // Each pool rotates through its own shuffled order, so no question repeats until its pool has been used up.
-const SEED=4848;
-const TIERS=[{levels:[1,2],per:3,salt:11},{levels:[3],per:2,salt:23},{levels:[4,5],per:1,salt:42}];
+const SEED=4849;
+const TIERS=[{levels:[1,2],per:2,salt:11},{levels:[3],per:2,salt:23},{levels:[4,5],per:1,salt:42},{levels:[6],per:1,salt:108}];
 const POOLS=TIERS.map(t=>BANK.map((_,i)=>i).filter(i=>t.levels.includes(META[i].level)));
 function takeFrom(pool,per,n,salt){
   const out=[];let pos=(n-1)*per;
@@ -619,9 +741,10 @@ function questionsFor(n){
 // A day already started keeps its exact questions, even if the bank grows later.
 function questionsFromIds(ids,n){if(!ids||ids.length!==PER_DAY||!ids.every(id=>id in BY_ID))return null;return ids.map((id,qi)=>makeQ(BY_ID[id],n,qi))}
 let QS=questionsFor(dayNo);
+const preloadPics=()=>QS.forEach(q=>{if(q.img){const im=new Image();im.src=q.img}});
 // Days whose questions were swapped after people had played them. A result saved for one of these
 // days under its old questions is discarded, here and in the cloud copy, so the day can be played fresh.
-const REFRESHED_DAYS=["2026-10-10","2026-10-11"];
+const REFRESHED_DAYS=["2026-10-11"];
 const dayNoOf=k=>Math.max(1,Math.round((parseYmd(k)-EPOCH)/864e5)+1);
 const staleDay=(k,h)=>REFRESHED_DAYS.includes(k)&&!!h&&(h.qids||[]).join()!==questionsFor(dayNoOf(k)).map(q=>q.id).join();
 
@@ -662,6 +785,7 @@ function showQuestion(i,revealed){
   const q=QS[i]; const pick=state.picks[i];
   stage.innerHTML=`<div class="card">
     <div class="era"><span>${q.era}</span><span>No. ${NUMS[i]} · ${i+1} of ${PER_DAY}</span></div>
+    ${q.img?`<div class="pic"><img src="${esc(q.img)}" alt="A frame from a LOST episode" decoding="async"><span class="tag"><b>●</b> FEED ${String(NUMS[i]).padStart(2,"0")}</span></div>`:""}
     <p class="q" id="qtext">${esc(q.q)}</p>
     <div class="opts">${q.opts.map((o,j)=>{let c="";if(revealed){c=j===q.answer?"right":(j===pick?"wrong":"dim")}return`<button class="opt ${c}" id="opt${j}" data-j="${j}" ${revealed?"disabled":""}><span class="k">[${"ABCD"[j]}]</span><span>${esc(o)}</span></button>`}).join("")}</div>
     ${revealed?`<button class="next" id="nextBtn">${i===PER_DAY-1?"[ VIEW RESULTS ]":"[ EXECUTE ]"}</button>`:""}
@@ -753,6 +877,7 @@ function introStatus(){const n=state.picks.length;
   return{status:state.done?"SEQUENCE COMPLETE. RESULTS ON FILE.":n?`SEQUENCE IN PROGRESS: ${n} OF ${PER_DAY} ENTERED.`:`${PER_DAY} QUESTIONS QUEUED.`,
          label:state.done?"[ VIEW RESULTS ]":n?"[ RESUME ]":"[ BEGIN ]"}}
 function intro(){
+  preloadPics();
   view="intro";introSkipped=false;
   $("progress").hidden=true;
   const longDate=today.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"}).toUpperCase();
@@ -998,7 +1123,7 @@ function renderStatsPage(){
       <div><p class="swh">WEAK SPOTS</p>${S.weaknesses.length?S.weaknesses.map(a=>`<p class="swi bad">− ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join(""):'<p class="swi dimln">No weak spots found.</p>'}</div></div>
       ${S.weaknesses[0]?`<p class="dimln">${tipFor(S.weaknesses[0].label)}</p>`:""}`;
   const seasonRows=[1,2,3,4,5,6].map(s=>srow("Season "+s,S.seasons.get(s))).join("");
-  const typeRows=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline"].map(t=>srow(t,S.types.get(t))).join("");
+  const typeRows=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline","Visual Record"].map(t=>srow(t,S.types.get(t))).join("");
   const ch=Object.entries(S.chars.all()).sort((a,b)=>b[1].n-a[1].n||b[1].c/b[1].n-a[1].c/a[1].n);
   const chRows=ch.slice(0,10).map(([k,v])=>srow(k,v)).join(""), chMore=ch.slice(10).map(([k,v])=>srow(k,v)).join("");
   const slotRows=NUMS.map((num,i)=>srow("No. "+String(num).padStart(2,"0"),S.slots.get(i))).join("");
@@ -1074,7 +1199,7 @@ function renderFriendPage(id){
   const today=!fd?.done?`<p class="dimln">${esc(them)} hasn't played today yet.</p>`:!td?.done?`<p class="dimln">${esc(them)} has played. Finish yours to see the score.</p>`
     :`<div class="flist"><div class="frow me"><span class="fn">${esc(me)}</span><span class="fa"><span class="sq">${squares(td)}</span><b>${td.score}/6</b></span></div><div class="frow"><span class="fn">${esc(them)}</span><span class="fa"><span class="sq">${squares(fd)}</span><b>${fd.score}/6</b></span></div></div>`;
   const seasons=[1,2,3,4,5,6].map(s=>cmpRow("Season "+s,accV(A.seasons.get(s)),accV(B.seasons.get(s)),P)).join("");
-  const types=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline"].map(t=>cmpRow(t,accV(A.types.get(t)),accV(B.types.get(t)),P)).join("");
+  const types=["Island Trivia","Complete the Quote","Who Said It","Episode Titles","Timeline","Visual Record"].map(t=>cmpRow(t,accV(A.types.get(t)),accV(B.types.get(t)),P)).join("");
   const chs=[...new Set([...Object.keys(A.chars.all()),...Object.keys(B.chars.all())])].map(ch=>[ch,A.chars.get(ch).n+B.chars.get(ch).n]).sort((a,b)=>b[1]-a[1]).slice(0,10)
     .map(([ch])=>cmpRow(ch,accV(A.chars.get(ch)),accV(B.chars.get(ch)),P)).join("");
   const sw=B.n<MIN_SAMPLE*3?`<p class="dimln">Not enough data on ${esc(them)} yet.</p>`:`<div class="sw"><div><p class="swh">STRENGTHS</p>${B.strengths.map(a=>`<p class="swi good">+ ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join("")||'<p class="swi dimln">None yet.</p>'}</div><div><p class="swh">WEAK SPOTS</p>${B.weaknesses.map(a=>`<p class="swi bad">− ${esc(a.label)} <span>${pct(a.c,a.n)}</span></p>`).join("")||'<p class="swi dimln">None found.</p>'}</div></div>`;
